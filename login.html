@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zenova – Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD2l4NnlWbQth_d6Ql--JQ4n0Nt4z3n9cg",
+    authDomain: "zenovafreeuser.firebaseapp.com",
+    projectId: "zenovafreeuser",
+    storageBucket: "zenovafreeuser.firebasestorage.app",
+    messagingSenderId: "1025530489227",
+    appId: "1:1025530489227:web:0582edc8ac4d4b9eb7278e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  window.firebaseAuth = auth;
+  window.firebaseProvider = provider;
+  window.firebaseSignIn = signInWithEmailAndPassword;
+  window.firebaseGoogleSignIn = signInWithPopup;
+  window.firebaseSendPasswordReset = sendPasswordResetEmail;
+</script>
+
+<style>
+:root {
+  --navy:        #0B2559;
+  --navy-dark:   #071840;
+  --navy-mid:    #163275;
+  --navy-light:  #1E3F8A;
+  --accent:      #1D4ED8;
+  --accent-glow: rgba(29,78,216,0.18);
+  --gold:        #D97706;
+  --gold-light:  #F59E0B;
+  --gold-pale:   #FFFBEB;
+  --white:       #FFFFFF;
+  --off-white:   #F5F7FF;
+  --surface:     #EEF2FF;
+  --border:      #D1D9F0;
+  --border-focus:#1D4ED8;
+  --text-main:   #0B2559;
+  --text-body:   #374270;
+  --text-muted:  #6B7BAD;
+  --success:     #059669;
+  --danger:      #DC2626;
+  --radius:      16px;
+  --radius-sm:   10px;
+  --shadow-sm:   0 2px 12px rgba(11,37,89,0.08);
+  --shadow-md:   0 8px 36px rgba(11,37,89,0.13);
+  --shadow-lg:   0 20px 70px rgba(11,37,89,0.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1,h2,h3,h4 { font-family: 'Sora', sans-serif; }
+
+/* ── LAYOUT ── */
+.page {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── LEFT PANEL ── */
+.left-panel {
+  width: 420px;
+  min-height: 100vh;
+  background: var(--navy-dark);
+  display: flex;
+  flex-direction: column;
+  padding: 44px 40px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.left-panel::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 380px; height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,78,216,0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.left-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -60px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* dot grid */
+.left-panel-bg {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.left-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; margin-bottom: 56px;
+  position: relative; z-index: 1;
+}
+.left-logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--accent), var(--navy-light));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Sora', sans-serif;
+  font-size: 18px; font-weight: 900;
+  color: white; letter-spacing: -1px;
+  box-shadow: 0 4px 16px rgba(29,78,216,0.4);
+}
+.left-logo-text .brand {
+  font-family: 'Sora', sans-serif;
+  font-size: 18px; font-weight: 800;
+  color: white; letter-spacing: 1.5px;
+  display: block;
+}
+.left-logo-text .sub {
+  font-size: 10px; color: rgba(255,255,255,0.45);
+  line-height: 1;
+}
+
+.left-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
+
+.left-headline {
+  font-size: 28px; font-weight: 800;
+  color: white; line-height: 1.2;
+  margin-bottom: 12px;
+}
+.left-headline .gold { color: var(--gold-light); }
+
+.left-subtext {
+  font-size: 13.5px; color: rgba(255,255,255,0.55);
+  line-height: 1.65; margin-bottom: 44px;
+}
+
+.feature-list { display: flex; flex-direction: column; gap: 18px; }
+.feature-item {
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.feature-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0; margin-top: 1px;
+}
+.feature-text .ft-title { font-size: 13.5px; font-weight: 600; color: white; margin-bottom: 2px; }
+.feature-text .ft-desc { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+.left-bottom {
+  margin-top: auto; padding-top: 32px;
+  position: relative; z-index: 1;
+}
+.jamb-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(245,158,11,0.12);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 30px; padding: 7px 16px;
+  font-size: 11px; font-weight: 700; color: var(--gold-light);
+  letter-spacing: 0.5px;
+}
+.jamb-tag .dot { width: 6px; height: 6px; background: var(--gold-light); border-radius: 50%; animation: pulse 1.5s infinite; }
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  flex: 1;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle grid bg */
+.right-panel::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 460px;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.55s ease both;
+}
+
+.form-header { margin-bottom: 32px; }
+.form-eyebrow {
+  font-size: 11px; font-weight: 700;
+  color: var(--accent); letter-spacing: 1.2px;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.form-title {
+  font-size: 28px; font-weight: 800;
+  color: var(--navy); line-height: 1.15;
+  margin-bottom: 8px;
+}
+.form-sub {
+  font-size: 13.5px; color: var(--text-muted); line-height: 1.5;
+}
+.form-sub a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.form-sub a:hover { text-decoration: underline; }
+
+/* Google button */
+.btn-google {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 13px 20px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text-main); font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.btn-google:hover { border-color: var(--accent); background: var(--off-white); box-shadow: var(--shadow-md); }
+.btn-google svg { flex-shrink: 0; }
+
+/* divider */
+.divider {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.divider span { font-size: 12px; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
+
+/* form fields */
+.field-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: 600; color: var(--text-main); }
+
+.input-wrap { position: relative; }
+.input-wrap .input-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none;
+}
+.input-wrap input {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--text-main);
+  background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.input-wrap input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3.5px var(--accent-glow);
+}
+.input-wrap input.error { border-color: var(--danger); }
+.input-wrap input::placeholder { color: var(--text-muted); opacity: 0.7; }
+
+.toggle-pw {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); padding: 0; display: flex;
+  transition: color 0.2s;
+}
+.toggle-pw:hover { color: var(--navy); }
+
+.field-error {
+  font-size: 11.5px; color: var(--danger); font-weight: 500;
+  display: none; align-items: center; gap: 4px;
+}
+.field-error.show { display: flex; }
+
+/* forgot password */
+.forgot-row {
+  display: flex; justify-content: flex-end;
+  margin-top: -8px; margin-bottom: 20px;
+}
+.forgot-row a {
+  font-size: 12.5px; color: var(--accent); font-weight: 600;
+  text-decoration: none;
+}
+.forgot-row a:hover { text-decoration: underline; }
+
+/* submit button */
+.btn-submit {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--navy);
+  border: none; border-radius: var(--radius-sm);
+  color: white; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 4px 20px rgba(11,37,89,0.25);
+  margin-bottom: 20px;
+}
+.btn-submit:hover { background: var(--navy-light); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(11,37,89,0.3); }
+.btn-submit:active { transform: translateY(0); }
+.btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+.loading .spinner { display: block; }
+.loading .btn-label { display: none; }
+
+/* error alert */
+.alert-error {
+  display: none;
+  align-items: flex-start; gap: 10px;
+  background: #FEF2F2; border: 1px solid #FECACA;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px; color: #991B1B; font-weight: 500;
+  margin-bottom: 16px;
+}
+.alert-error.show { display: flex; }
+.alert-error svg { flex-shrink: 0; margin-top: 1px; }
+
+/* footer links */
+.form-footer-links {
+  text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 4px;
+}
+.form-footer-links a { color: var(--text-muted); text-decoration: none; }
+.form-footer-links a:hover { color: var(--navy); text-decoration: underline; }
+
+/* ── FORGOT PASSWORD OVERLAY ── */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(7,24,64,0.55);
+  backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+
+.modal-box {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  max-width: 420px; width: 100%;
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp 0.35s ease both;
+  position: relative;
+}
+.modal-close {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); font-size: 20px; line-height: 1;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: var(--navy); }
+
+.modal-icon {
+  width: 52px; height: 52px;
+  background: var(--surface);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 18px;
+}
+.modal-title { font-size: 20px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+.modal-sub { font-size: 13.5px; color: var(--text-muted); line-height: 1.55; margin-bottom: 24px; }
+
+.modal-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--text-main);
+  outline: none; margin-bottom: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.modal-input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3.5px var(--accent-glow); }
+
+.btn-modal-send {
+  width: 100%;
+  padding: 13px;
+  background: var(--navy); border: none;
+  border-radius: var(--radius-sm);
+  color: white; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+.btn-modal-send:hover { background: var(--navy-light); }
+
+.modal-success {
+  display: none; text-align: center;
+}
+.modal-success.show { display: block; }
+.modal-success .tick {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #DCFCE7;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 24px;
+}
+.modal-success p { font-size: 13.5px; color: var(--text-muted); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ── MOBILE ── */
+@media (max-width: 860px) {
+  .page { flex-direction: column; }
+  .left-panel {
+    width: 100%; min-height: auto;
+    padding: 28px 24px 32px;
+  }
+  .left-headline { font-size: 22px; }
+  .feature-list { display: none; }
+  .left-bottom { display: none; }
+  .left-content { margin-bottom: 0; }
+  .left-subtext { display: none; }
+  .right-panel { padding: 36px 24px; align-items: flex-start; }
+  .form-card { max-width: 100%; }
+  .form-title { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page" id="loginPage">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="left-panel">
+    <div class="left-panel-bg"></div>
+
+    <a href="index.html" class="left-logo">
+      <div class="left-logo-icon">Z</div>
+      <div class="left-logo-text">
+        <span class="brand">ZENOVA</span>
+        <span class="sub">Master the Lekki Headmaster</span>
+      </div>
+    </a>
+
+    <div class="left-content">
+      <h2 class="left-headline">Welcome back,<br><span class="gold">Champion.</span></h2>
+      <p class="left-subtext">Continue your JAMB preparation journey. Your progress is saved and waiting for you.</p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">📝</div>
+          <div class="feature-text">
+            <div class="ft-title">CBT Practice Tests</div>
+            <div class="ft-desc">JAMB-style questions with instant scoring</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📖</div>
+          <div class="feature-text">
+            <div class="ft-title">Chapter Summaries</div>
+            <div class="ft-desc">All 10 chapters of The Lekki Headmaster</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🎧</div>
+          <div class="feature-text">
+            <div class="ft-title">Audio Lessons</div>
+            <div class="ft-desc">Listen on the go — perfect for commuters</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <div class="ft-title">Progress Tracking</div>
+            <div class="ft-desc">See your improvement over time</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="left-bottom">
+        <div class="jamb-tag">
+          <span class="dot"></span>
+          JAMB UTME 2025/2026 Ready
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div class="right-panel">
+    <div class="form-card">
+
+      <div class="form-header">
+        <div class="form-eyebrow">Welcome Back</div>
+        <h1 class="form-title">Sign in to Zenova</h1>
+        <p class="form-sub">
+          Don't have an account? <a href="signup.html">Create one free →</a>
+        </p>
+      </div>
+
+      <!-- Google Sign-In -->
+      <button class="btn-google" onclick="handleGoogleLogin()">
+        <svg width="18" height="18" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="divider"><span>or sign in with email</span></div>
+
+      <!-- Error Alert -->
+      <div class="alert-error" id="alertError">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="alertErrorText">Invalid email or password. Please try again.</span>
+      </div>
+
+      <!-- Form -->
+      <div class="field-group">
+        <div class="field">
+          <label for="loginEmail">Email Address</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email"/>
+          </div>
+          <div class="field-error" id="emailError">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Please enter a valid email address
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password"/>
+            <button class="toggle-pw" type="button" onclick="togglePw('loginPassword', this)" aria-label="Show password">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div class="field-error" id="passwordError">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Password must be at least 6 characters
+          </div>
+        </div>
+      </div>
+
+      <div class="forgot-row">
+        <a href="#" onclick="openForgotModal(); return false;">Forgot password?</a>
+      </div>
+
+      <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
+        <span class="btn-label">Sign In →</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="form-footer-links">
+        <a href="index.html">← Back to Home</a> &nbsp;·&nbsp; <a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── FORGOT PASSWORD MODAL ── -->
+<div class="modal-overlay" id="forgotModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeForgotModal()">×</button>
+
+    <div id="forgotForm">
+      <div class="modal-icon">🔑</div>
+      <h2 class="modal-title">Reset Password</h2>
+      <p class="modal-sub">Enter your email address and we'll send you a link to reset your password.</p>
+      <input type="email" class="modal-input" id="resetEmail" placeholder="your@email.com"/>
+      <button class="btn-modal-send" onclick="handleResetPassword()">Send Reset Link</button>
+    </div>
+
+    <div class="modal-success" id="forgotSuccess">
+      <div class="tick">✓</div>
+      <h3 style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:8px;">Check your inbox!</h3>
+      <p>We've sent a password reset link to <strong id="resetEmailDisplay"></strong>. Check your spam folder if you don't see it.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PASSWORD TOGGLE ──
+function togglePw(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const isText = input.type === 'text';
+  input.type = isText ? 'password' : 'text';
+  btn.innerHTML = isText
+    ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+}
+
+// ── FORM VALIDATION ──
+function validateLoginForm() {
+  let valid = true;
+  const email = document.getElementById('loginEmail');
+  const password = document.getElementById('loginPassword');
+  const emailErr = document.getElementById('emailError');
+  const pwErr = document.getElementById('passwordError');
+
+  emailErr.classList.remove('show'); email.classList.remove('error');
+  pwErr.classList.remove('show'); password.classList.remove('error');
+  document.getElementById('alertError').classList.remove('show');
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.value.trim())) {
+    emailErr.classList.add('show'); email.classList.add('error');
+    valid = false;
+  }
+  if (password.value.length < 6) {
+    pwErr.classList.add('show'); password.classList.add('error');
+    valid = false;
+  }
+  return valid;
+}
+
+// ── HANDLE LOGIN ──
+function handleLogin() {
+  if (!validateLoginForm()) return;
+
+  const btn = document.getElementById('loginBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  // Wait for Firebase to be ready (module loads async)
+  const tryLogin = () => {
+    if (!window.firebaseAuth || !window.firebaseSignIn) {
+      setTimeout(tryLogin, 100);
+      return;
+    }
+    window.firebaseSignIn(window.firebaseAuth, email, password)
+      .then(() => {
+        window.location.href = 'dashboard-free.html';
+      })
+      .catch(err => {
+        btn.classList.remove('loading'); btn.disabled = false;
+        const alertEl = document.getElementById('alertError');
+        document.getElementById('alertErrorText').textContent = getFirebaseError(err.code);
+        alertEl.classList.add('show');
+      });
+  };
+  tryLogin();
+}
+
+// ── HANDLE GOOGLE LOGIN ──
+function handleGoogleLogin() {
+  const tryGoogle = () => {
+    if (!window.firebaseAuth || !window.firebaseGoogleSignIn || !window.firebaseProvider) {
+      setTimeout(tryGoogle, 100);
+      return;
+    }
+    window.firebaseGoogleSignIn(window.firebaseAuth, window.firebaseProvider)
+      .then(() => { window.location.href = 'dashboard-free.html'; })
+      .catch(err => {
+        const alertEl = document.getElementById('alertError');
+        document.getElementById('alertErrorText').textContent = 'Google sign-in failed. Please try again.';
+        alertEl.classList.add('show');
+        console.error(err);
+      });
+  };
+  tryGoogle();
+}
+
+// ── FORGOT PASSWORD ──
+function openForgotModal() {
+  document.getElementById('forgotModal').classList.add('open');
+  document.getElementById('forgotForm').style.display = 'block';
+  document.getElementById('forgotSuccess').classList.remove('show');
+}
+function closeForgotModal() {
+  document.getElementById('forgotModal').classList.remove('open');
+}
+function handleResetPassword() {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email) return;
+
+  const tryReset = () => {
+    if (!window.firebaseAuth || !window.firebaseSendPasswordReset) {
+      setTimeout(tryReset, 100);
+      return;
+    }
+    window.firebaseSendPasswordReset(window.firebaseAuth, email)
+      .then(() => { showResetSuccess(email); })
+      .catch(err => {
+        console.error(err);
+        // Still show success to avoid email enumeration
+        showResetSuccess(email);
+      });
+  };
+  tryReset();
+}
+function showResetSuccess(email) {
+  document.getElementById('forgotForm').style.display = 'none';
+  document.getElementById('resetEmailDisplay').textContent = email;
+  document.getElementById('forgotSuccess').classList.add('show');
+  setTimeout(closeForgotModal, 3500);
+}
+
+// Close modal on overlay click
+document.getElementById('forgotModal').addEventListener('click', function(e) {
+  if (e.target === this) closeForgotModal();
+});
+
+// ── FIREBASE ERROR MESSAGES ──
+function getFirebaseError(code) {
+  switch(code) {
+    case 'auth/user-not-found': return 'No account found with this email address.';
+    case 'auth/wrong-password': return 'Incorrect password. Please try again.';
+    case 'auth/invalid-credential': return 'Invalid email or password. Please try again.';
+    case 'auth/too-many-requests': return 'Too many attempts. Please wait a few minutes and try again.';
+    case 'auth/invalid-email': return 'Invalid email address format.';
+    case 'auth/user-disabled': return 'This account has been disabled. Contact support.';
+    case 'auth/network-request-failed': return 'Network error. Check your internet connection.';
+    default: return 'Something went wrong. Please try again.';
+  }
+}
+
+// Enter key to submit
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleLogin();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zenova – Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+:root{
+  --navy:#0D1F4E;
+  --navy-dark:#091539;
+  --navy-mid:#152B6B;
+  --white:#FFFFFF;
+  --bg:#F4F6FB;
+  --border:#E2E8F4;
+  --text:#0D1F4E;
+  --text-body:#4A5578;
+  --text-muted:#8A94B2;
+  --blue-light:#EEF2FF;
+  --accent:#1A56DB;
+  --gold:#F59E0B;
+  --success:#059669;
+  --danger:#DC2626;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 1px 4px rgba(13,31,78,.07),0 4px 16px rgba(13,31,78,.05);
+  --sidebar-w:210px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+h1,h2,h3,h4,h5{font-family:'Sora',sans-serif;}
+
+/* ══ OVERLAY (mobile) ══ */
+.overlay{
+  display:none;position:fixed;inset:0;z-index:99;
+  background:rgba(9,21,57,.45);backdrop-filter:blur(2px);
+}
+.overlay.show{display:block;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sidebar-w);background:var(--white);
+  min-height:100vh;display:flex;flex-direction:column;
+  position:fixed;left:0;top:0;bottom:0;
+  border-right:1px solid var(--border);
+  z-index:100;overflow-y:auto;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.sidebar-logo{
+  padding:20px 18px 16px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border);text-decoration:none;
+}
+.logo-img{width:42px;height:42px;object-fit:contain;border-radius:10px;flex-shrink:0;}
+.logo-fallback{
+  width:42px;height:42px;border-radius:10px;
+  background:var(--navy);display:flex;align-items:center;justify-content:center;
+  font-family:'Sora',sans-serif;font-size:18px;font-weight:900;color:white;flex-shrink:0;
+}
+.logo-name{font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:var(--navy);letter-spacing:.5px;line-height:1;}
+.logo-sub{font-size:10px;color:var(--text-muted);font-weight:400;margin-top:2px;}
+
+.sidebar-nav{padding:14px 10px;flex:1;display:flex;flex-direction:column;gap:2px;}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border-radius:var(--radius-sm);
+  color:var(--text-body);font-size:14px;font-weight:500;
+  cursor:pointer;text-decoration:none;
+  transition:background .15s,color .15s;
+  border:none;background:none;width:100%;text-align:left;
+  font-family:'DM Sans',sans-serif;
+}
+.nav-item:hover{background:var(--blue-light);color:var(--navy);}
+.nav-item.active{background:var(--navy);color:var(--white);font-weight:600;}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.7;}
+.nav-item.active svg,.nav-item:hover svg{opacity:1;}
+
+.sidebar-footer{padding:10px;border-top:1px solid var(--border);}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  position:fixed;left:var(--sidebar-w);right:0;top:0;height:64px;
+  background:var(--white);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;z-index:50;
+  transition:left .3s cubic-bezier(.4,0,.2,1);
+}
+.hamburger{
+  background:none;border:none;cursor:pointer;color:var(--text);
+  display:flex;align-items:center;padding:6px;border-radius:8px;
+  transition:background .15s;
+}
+.hamburger:hover{background:var(--blue-light);}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.notif-btn{
+  position:relative;width:40px;height:40px;border-radius:50%;
+  background:var(--blue-light);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:var(--navy);
+}
+.notif-badge{
+  position:absolute;top:4px;right:4px;width:16px;height:16px;
+  border-radius:50%;background:var(--accent);color:white;
+  font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  border:2px solid white;
+}
+.user-profile{
+  display:flex;align-items:center;gap:10px;cursor:pointer;
+  padding:6px 10px 6px 6px;border-radius:30px;border:1px solid var(--border);
+  transition:background .15s;
+}
+.user-profile:hover{background:var(--blue-light);}
+.user-avatar{
+  width:36px;height:36px;border-radius:50%;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.uname{font-size:13.5px;font-weight:700;color:var(--navy);line-height:1.2;}
+.uemail{font-size:11px;color:var(--text-muted);}
+
+/* ══ MAIN ══ */
+.main{
+  margin-left:var(--sidebar-w);margin-top:64px;
+  padding:24px;display:flex;flex-direction:column;gap:20px;
+  min-height:calc(100vh - 64px);
+  transition:margin-left .3s cubic-bezier(.4,0,.2,1);
+}
+
+/* ══ WELCOME CARD ══ */
+.welcome-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px 26px;
+  display:flex;align-items:center;gap:18px;
+  box-shadow:var(--shadow);animation:fadeUp .4s ease both;
+}
+.welcome-avatar{
+  width:60px;height:60px;border-radius:50%;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.welcome-text{flex:1;}
+.welcome-text h2{font-size:21px;font-weight:800;color:var(--navy);margin-bottom:3px;}
+.welcome-text p{font-size:13.5px;color:var(--text-muted);}
+.welcome-right{display:flex;gap:28px;align-items:center;flex-shrink:0;}
+.plan-block{text-align:center;}
+.pb-label{font-size:11px;color:var(--text-muted);font-weight:500;margin-bottom:6px;}
+.plan-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--navy);color:white;border-radius:30px;
+  padding:7px 16px;font-size:13px;font-weight:800;font-family:'Sora',sans-serif;
+}
+.plan-divider{width:1px;height:46px;background:var(--border);}
+.expires-date{font-size:17px;font-weight:800;color:var(--navy);font-family:'Sora',sans-serif;line-height:1.1;}
+.expires-countdown{font-size:12px;font-weight:700;color:var(--danger);margin-top:2px;}
+
+/* ══ FREE TRIAL BANNER ══ */
+.trial-banner{
+  background:linear-gradient(135deg,#FFF7ED,#FFFBEB);
+  border:1.5px solid #FED7AA;border-radius:var(--radius);
+  padding:16px 20px;display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;animation:fadeUp .4s .05s ease both;
+}
+.trial-banner-text{flex:1;}
+.trial-banner-text strong{font-size:14px;font-weight:700;color:#92400E;display:block;margin-bottom:2px;}
+.trial-banner-text span{font-size:12.5px;color:#B45309;}
+.btn-trial-upgrade{
+  padding:10px 20px;background:var(--navy);border:none;border-radius:var(--radius-sm);
+  color:white;font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;white-space:nowrap;
+  transition:background .15s,transform .1s;
+}
+.btn-trial-upgrade:hover{background:var(--navy-mid);transform:translateY(-1px);}
+
+/* ══ FEATURE CARDS ══ */
+.feature-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.feature-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;
+  animation:fadeUp .4s ease both;
+}
+.feature-card:nth-child(2){animation-delay:.08s;}
+.feature-card:nth-child(3){animation-delay:.16s;}
+.fc-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;}
+.fc-icon{
+  width:48px;height:48px;border-radius:12px;background:var(--blue-light);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.fc-icon svg{width:24px;height:24px;color:var(--navy);}
+.fc-title{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:3px;}
+.fc-desc{font-size:12.5px;color:var(--text-muted);line-height:1.45;}
+.fc-stat{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px;}
+.fc-score{font-size:13px;font-weight:600;color:var(--text-body);margin-bottom:10px;}
+.fc-score span{font-weight:700;color:var(--navy);}
+.fc-progress-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.fc-bar-wrap{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.fc-bar{height:100%;border-radius:4px;background:var(--navy);transition:width .8s ease;}
+.fc-pct{font-size:12px;font-weight:700;color:var(--text-body);width:30px;text-align:right;}
+.btn-fc{
+  width:100%;padding:12px;background:var(--navy);border:none;
+  border-radius:var(--radius-sm);color:white;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .15s,transform .1s;margin-top:auto;
+}
+.btn-fc:hover{background:var(--navy-mid);transform:translateY(-1px);}
+.btn-fc svg{width:16px;height:16px;}
+
+/* ══ BOTTOM GRID ══ */
+.bottom-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;}
+
+/* Progress card */
+.progress-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px 26px;
+  box-shadow:var(--shadow);animation:fadeUp .5s .2s ease both;
+}
+.progress-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.ph-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--navy);}
+.ph-title svg{width:18px;height:18px;}
+.ph-right{font-size:13px;color:var(--text-muted);}
+.progress-pct{font-size:40px;font-weight:900;color:var(--navy);font-family:'Sora',sans-serif;margin:6px 0 10px;}
+.progress-bar-wrap{height:10px;background:var(--border);border-radius:6px;overflow:hidden;margin-bottom:10px;}
+.progress-bar{height:100%;border-radius:6px;background:var(--navy);transition:width 1s ease;}
+.progress-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px;}
+.mini-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.mini-stat{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:14px 12px;
+  display:flex;align-items:center;gap:10px;
+}
+.ms-icon{font-size:22px;flex-shrink:0;}
+.ms-val{font-size:20px;font-weight:800;color:var(--navy);font-family:'Sora',sans-serif;line-height:1;}
+.ms-label{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+/* Plan status card */
+.plan-status-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;
+  animation:fadeUp .5s .3s ease both;
+}
+.psc-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.psc-header svg{width:18px;height:18px;color:var(--navy);}
+.psc-header h3{font-size:15px;font-weight:700;color:var(--navy);}
+.psc-box{
+  background:var(--navy);border-radius:var(--radius);padding:20px;flex:1;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;
+}
+.psc-crown{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+}
+.psc-crown svg{width:26px;height:26px;color:var(--gold);}
+.psc-plan-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:900;color:white;letter-spacing:.5px;}
+.psc-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.5;}
+.psc-trial-badge{
+  background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.4);
+  border-radius:20px;padding:4px 14px;
+  font-size:11px;font-weight:700;color:var(--gold);
+}
+.psc-expires{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.5);}
+.psc-expires svg{width:13px;height:13px;}
+.psc-expires strong{color:white;font-weight:700;}
+.btn-upgrade-plan{
+  width:100%;padding:12px;background:var(--gold);border:none;
+  border-radius:var(--radius-sm);color:#1C0B00;font-size:14px;font-weight:800;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:filter .15s,transform .1s;
+  margin-top:4px;
+}
+.btn-upgrade-plan:hover{filter:brightness(1.07);transform:translateY(-1px);}
+.btn-upgrade-plan-outline{
+  width:100%;padding:11px;background:transparent;border:1.5px solid rgba(255,255,255,.25);
+  border-radius:var(--radius-sm);color:rgba(255,255,255,.8);font-size:13px;font-weight:600;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:border-color .15s,color .15s;
+}
+.btn-upgrade-plan-outline:hover{border-color:white;color:white;}
+
+/* ══ QUICK ACTIONS ══ */
+.quick-section{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px 24px;
+  box-shadow:var(--shadow);animation:fadeUp .5s .35s ease both;
+}
+.qs-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.qs-header h3{font-size:16px;font-weight:800;color:var(--navy);}
+.qs-header a{font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:4px;}
+.qs-header a:hover{text-decoration:underline;}
+.qa-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.qa-item{
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:16px;display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:border-color .15s,background .15s,transform .1s;
+  text-decoration:none;
+}
+.qa-item:hover{border-color:var(--navy);background:var(--blue-light);transform:translateY(-1px);}
+.qa-icon{
+  width:44px;height:44px;border-radius:10px;background:var(--blue-light);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.qa-icon svg{width:22px;height:22px;color:var(--navy);}
+.qa-info{flex:1;}
+.qa-title{font-size:13.5px;font-weight:700;color:var(--navy);}
+.qa-desc{font-size:12px;color:var(--text-muted);margin-top:1px;}
+.qa-arrow svg{width:16px;height:16px;color:var(--text-muted);}
+
+/* ══ MODAL BASE ══ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(9,21,57,.6);backdrop-filter:blur(5px);
+  align-items:center;justify-content:center;padding:24px;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:white;border-radius:20px;padding:36px 32px;
+  max-width:520px;width:100%;box-shadow:0 20px 70px rgba(13,31,78,.22);
+  animation:fadeUp .3s ease both;position:relative;
+}
+.modal-close{
+  position:absolute;top:16px;right:18px;background:none;border:none;
+  font-size:22px;cursor:pointer;color:var(--text-muted);transition:color .15s;
+  line-height:1;
+}
+.modal-close:hover{color:var(--navy);}
+
+/* Upgrade modal */
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.plan-card{
+  border:2px solid var(--border);border-radius:12px;padding:20px;
+  cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .15s;
+  position:relative;
+}
+.plan-card:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:var(--shadow);}
+.plan-card.selected{border-color:var(--navy);box-shadow:0 0 0 3px rgba(13,31,78,.1);}
+.plan-card.popular{border-color:var(--gold);}
+.plan-card.popular.selected{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,158,11,.15);}
+.popular-tag{
+  position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:#1C0B00;
+  font-size:10px;font-weight:800;padding:3px 12px;border-radius:20px;white-space:nowrap;
+}
+.plan-name-modal{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.plan-price-modal{font-size:22px;font-weight:900;color:var(--navy);font-family:'Sora',sans-serif;margin-bottom:10px;}
+.plan-price-modal span{font-size:12px;font-weight:400;color:var(--text-muted);}
+.plan-features-modal{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.plan-features-modal li{font-size:12.5px;color:var(--text-body);display:flex;align-items:center;gap:7px;}
+.plan-features-modal li::before{content:'✓';color:var(--success);font-weight:700;flex-shrink:0;}
+.btn-pay{
+  width:100%;padding:14px;background:var(--navy);border:none;
+  border-radius:var(--radius-sm);color:white;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .15s,transform .1s;
+}
+.btn-pay:hover{background:var(--navy-mid);transform:translateY(-1px);}
+
+/* CBT modal */
+.cbt-modal{
+  display:none;position:fixed;inset:0;z-index:600;
+  background:rgba(9,21,57,.65);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:24px;
+}
+.cbt-modal.open{display:flex;}
+.cbt-box{
+  background:white;border-radius:20px;padding:32px;
+  max-width:560px;width:100%;
+  box-shadow:0 20px 70px rgba(13,31,78,.25);
+  animation:fadeUp .35s ease both;position:relative;
+  max-height:90vh;overflow-y:auto;
+}
+.cbt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.cbt-header h2{font-size:18px;font-weight:800;color:var(--navy);}
+.cbt-timer{
+  display:flex;align-items:center;gap:6px;
+  background:#FEF3C7;border-radius:8px;padding:7px 14px;
+  font-size:14px;font-weight:700;color:#92400E;font-family:'Sora',sans-serif;
+}
+.q-progress-wrap{background:var(--border);border-radius:4px;height:6px;margin-bottom:16px;overflow:hidden;}
+.q-progress-bar{height:100%;border-radius:4px;background:var(--navy);transition:width .4s ease;}
+.q-num{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:8px;}
+.q-text{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:18px;line-height:1.45;}
+.q-options{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+.q-option{
+  padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;
+  cursor:pointer;font-size:14px;color:var(--text-body);font-weight:500;
+  display:flex;align-items:center;gap:10px;
+  transition:border-color .15s,background .15s;
+}
+.q-option:hover:not(.answered){border-color:var(--navy);background:var(--blue-light);}
+.q-option.selected{border-color:var(--accent);background:var(--blue-light);color:var(--navy);font-weight:700;}
+.q-option.correct{border-color:var(--success);background:#DCFCE7;color:#065F46;}
+.q-option.wrong{border-color:var(--danger);background:#FEE2E2;color:#991B1B;}
+.opt-letter{
+  width:28px;height:28px;border-radius:6px;background:var(--blue-light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;flex-shrink:0;
+  transition:background .15s,color .15s;
+}
+.q-option.selected .opt-letter{background:var(--accent);color:white;}
+.q-option.correct .opt-letter{background:var(--success);color:white;}
+.q-option.wrong .opt-letter{background:var(--danger);color:white;}
+.btn-cbt-next{
+  width:100%;padding:13px;background:var(--navy);border:none;
+  border-radius:10px;color:white;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:opacity .2s,background .15s;
+}
+.btn-cbt-next:disabled{opacity:.35;cursor:not-allowed;}
+.btn-cbt-next:not(:disabled):hover{background:var(--navy-mid);}
+
+/* Result screen */
+.cbt-result{display:none;text-align:center;}
+.cbt-result.show{display:block;}
+.result-icon{font-size:52px;margin-bottom:10px;}
+.result-score-big{font-size:54px;font-weight:900;font-family:'Sora',sans-serif;line-height:1;margin-bottom:6px;}
+.result-label{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.result-sub{font-size:13.5px;color:var(--text-muted);margin-bottom:24px;}
+.result-actions{display:flex;gap:10px;}
+.btn-result-retry{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:10px;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--navy);font-family:'DM Sans',sans-serif;}
+.btn-result-upgrade{flex:1;padding:12px;background:var(--gold);border:none;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700;color:#1C0B00;font-family:'DM Sans',sans-serif;}
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1024px){
+  .bottom-grid{grid-template-columns:1fr;}
+  .mini-stats{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:860px){
+  .feature-cards{grid-template-columns:1fr;}
+  .welcome-right{display:none;}
+}
+@media(max-width:768px){
+  /* Sidebar slides off-screen on mobile */
+  .sidebar{transform:translateX(calc(-1 * var(--sidebar-w)));transition:transform .3s cubic-bezier(.4,0,.2,1);}
+  .sidebar.open{transform:translateX(0);}
+  .topbar{left:0 !important;}
+  .main{margin-left:0 !important;}
+  .qa-list{grid-template-columns:1fr;}
+  .plans-grid{grid-template-columns:1fr;}
+  .modal-box{padding:28px 20px;}
+  .main{padding:16px;}
+}
+@media(max-width:480px){
+  .mini-stats{grid-template-columns:repeat(2,1fr);}
+  .welcome-text h2{font-size:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile overlay -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside class="sidebar" id="sidebar">
+  <a href="index.html" class="sidebar-logo">
+    <!-- Replace 1.png with your actual logo file in the same folder -->
+    <img src="1.png" class="logo-img" alt="Zenova Logo"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+    <div class="logo-fallback" style="display:none;">Z</div>
+    <div>
+      <div class="logo-name">ZENOVA</div>
+      <div class="logo-sub">Master Lekki Headmaster</div>
+    </div>
+  </a>
+
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="setActive(this);closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="setActive(this);closeSidebar();openCBT();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      CBT Practice
+    </button>
+    <a href="summaries.html" class="nav-item" onclick="closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Summaries
+    </a>
+    <a href="summaries.html" class="nav-item" onclick="closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+      Audio Lessons
+    </a>
+    <button class="nav-item" onclick="setActive(this);closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Progress
+    </button>
+    <button class="nav-item" onclick="setActive(this);closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      Bookmarks
+    </button>
+    <button class="nav-item" onclick="setActive(this);closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Performance
+    </button>
+    <button class="nav-item" onclick="setActive(this);closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M4.93 19.07a10 10 0 0 0 14.14 0"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+      Settings
+    </button>
+    <button class="nav-item" onclick="setActive(this);closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      Help &amp; Support
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="#" onclick="doSignOut();return false;" class="nav-item" style="color:var(--text-muted);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- ══════════ TOPBAR ══════════ -->
+<header class="topbar" id="topbar">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Toggle menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="topbar-right">
+    <button class="notif-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="notif-badge">3</div>
+    </button>
+    <div class="user-profile">
+      <div class="user-avatar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div>
+        <div class="uname" id="displayName">Emmanuel</div>
+        <div class="uemail" id="displayEmail">emmanuel@gmail.com</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="main" id="mainContent">
+
+  <!-- WELCOME -->
+  <div class="welcome-card">
+    <div class="welcome-avatar">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <div class="welcome-text">
+      <h2 id="welcomeMsg">Welcome back, Emmanuel!</h2>
+      <p>Keep learning, keep winning. 🚀</p>
+    </div>
+    <div class="welcome-right">
+      <div class="plan-block">
+        <div class="pb-label">Your Plan</div>
+        <div class="plan-badge">
+          FREE TRIAL
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        </div>
+      </div>
+      <div class="plan-divider"></div>
+      <div class="expires-block">
+        <div class="pb-label" style="font-size:11px;color:var(--text-muted);font-weight:500;margin-bottom:4px;">Trial Ends</div>
+        <div class="expires-date" id="trialEndDate">7 Jun 2026</div>
+        <div class="expires-countdown" id="trialDaysLeft">8 days left</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FREE TRIAL BANNER -->
+  <div class="trial-banner">
+    <div style="font-size:22px;">⚠️</div>
+    <div class="trial-banner-text">
+      <strong>You're on a Free Trial — Limited Access</strong>
+      <span>1 CBT/day · 1 chapter unlocked · 1 audio lesson. Upgrade to Scholar or Master for full access.</span>
+    </div>
+    <button class="btn-trial-upgrade" onclick="openUpgradeModal()">⚡ Upgrade Now →</button>
+  </div>
+
+  <!-- FEATURE CARDS -->
+  <div class="feature-cards">
+    <!-- CBT -->
+    <div class="feature-card">
+      <div class="fc-top">
+        <div class="fc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        </div>
+        <div>
+          <div class="fc-title">CBT Practice</div>
+          <div class="fc-desc">Practice JAMB-style questions and tests.</div>
+        </div>
+      </div>
+      <div class="fc-stat" id="cbtStatLabel">1 Free Test Available</div>
+      <div class="fc-score">Best Score: <span id="bestScore">—</span></div>
+      <button class="btn-fc" onclick="openCBT()">
+        Start Test
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+    <!-- Summaries -->
+    <div class="feature-card">
+      <div class="fc-top">
+        <div class="fc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div>
+          <div class="fc-title">Chapter Summaries</div>
+          <div class="fc-desc">Read and understand chapter breakdowns.</div>
+        </div>
+      </div>
+      <div class="fc-stat">1 of 10 Chapters Unlocked</div>
+      <div class="fc-progress-row">
+        <div class="fc-bar-wrap"><div class="fc-bar" style="width:10%"></div></div>
+        <div class="fc-pct">10%</div>
+      </div>
+      <button class="btn-fc" onclick="window.location.href='summaries.html'">
+        View Summaries
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+    <!-- Audio -->
+    <div class="feature-card">
+      <div class="fc-top">
+        <div class="fc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        </div>
+        <div>
+          <div class="fc-title">Audio Lessons</div>
+          <div class="fc-desc">Listen to audio summaries anytime, anywhere.</div>
+        </div>
+      </div>
+      <div class="fc-stat">1 Audio Lesson Available</div>
+      <div style="height:10px;margin-bottom:10px;"></div>
+      <button class="btn-fc" onclick="window.location.href='chapter-detail.html?ch=1'">
+        Listen Now
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- BOTTOM GRID -->
+  <div class="bottom-grid">
+
+    <!-- Progress -->
+    <div class="progress-card">
+      <div class="progress-header">
+        <div class="ph-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Your Progress
+        </div>
+        <div class="ph-right">Overall Progress</div>
+      </div>
+      <div class="progress-pct" id="overallPct">0%</div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="overallBar" style="width:0%"></div></div>
+      <div class="progress-sub" id="progressMsg">Take your first CBT test to start tracking progress!</div>
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <div class="ms-icon">📋</div>
+          <div>
+            <div class="ms-val" id="statTestsTaken">0</div>
+            <div class="ms-label">Tests Taken</div>
+          </div>
+        </div>
+        <div class="mini-stat">
+          <div class="ms-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <div>
+            <div class="ms-val" id="statTestsPassed">0</div>
+            <div class="ms-label">Tests Passed</div>
+          </div>
+        </div>
+        <div class="mini-stat">
+          <div class="ms-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A56DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div>
+            <div class="ms-val" id="statAvgScore">—</div>
+            <div class="ms-label">Average Score</div>
+          </div>
+        </div>
+        <div class="mini-stat">
+          <div class="ms-icon">🔥</div>
+          <div>
+            <div class="ms-val" id="statStreak">0</div>
+            <div class="ms-label">Day Streak</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan Status -->
+    <div class="plan-status-card">
+      <div class="psc-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <h3>Plan Status</h3>
+      </div>
+      <div class="psc-box">
+        <div class="psc-crown">
+          <svg viewBox="0 0 24 24" fill="var(--gold)" width="26" height="26"><path d="M12 2L8 9H2l5.5 4-2 7L12 16l6.5 4-2-7L22 9h-6z"/></svg>
+        </div>
+        <div class="psc-plan-name">FREE TRIAL</div>
+        <div class="psc-trial-badge">⏳ 8 days remaining</div>
+        <div class="psc-desc">Limited access. Upgrade to unlock all CBT tests, chapters and audio lessons.</div>
+        <div class="psc-expires">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Trial ends <strong>7 Jun 2026</strong>
+        </div>
+        <button class="btn-upgrade-plan" onclick="openUpgradeModal()">⚡ Upgrade Plan</button>
+        <button class="btn-upgrade-plan-outline" onclick="openUpgradeModal()">View Plans</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-section">
+    <div class="qs-header">
+      <h3>Quick Actions</h3>
+      <a href="#">View All <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a>
+    </div>
+    <div class="qa-list">
+      <a class="qa-item" href="#" onclick="openCBT();return false;">
+        <div class="qa-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        </div>
+        <div class="qa-info">
+          <div class="qa-title">Take CBT Test</div>
+          <div class="qa-desc">Improve your skills</div>
+        </div>
+        <div class="qa-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </a>
+      <a class="qa-item" href="summaries.html">
+          <div class="qa-desc">Learn chapter breakdowns</div>
+        </div>
+        <div class="qa-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </a>
+      <a class="qa-item" href="chapter-detail.html?ch=1">
+        <div class="qa-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        </div>
+        <div class="qa-info">
+          <div class="qa-title">Listen to Audio</div>
+          <div class="qa-desc">Boost your understanding</div>
+        </div>
+        <div class="qa-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════ UPGRADE MODAL ══════════ -->
+<div class="modal-overlay" id="upgradeModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeUpgradeModal()">×</button>
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:32px;margin-bottom:10px;">⚡</div>
+      <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px;">Unlock Full Access</h2>
+      <p style="font-size:13.5px;color:var(--text-muted);">Choose a plan to access all CBT tests, chapters &amp; audio lessons.</p>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card" id="scholarCard" onclick="selectPlan('scholar',this)">
+        <div class="plan-name-modal">Scholar</div>
+        <div class="plan-price-modal">₦500<span>/mo</span></div>
+        <ul class="plan-features-modal">
+          <li>Unlimited CBT tests</li>
+          <li>5 chapter summaries</li>
+          <li>5 audio lessons</li>
+          <li>Progress tracking</li>
+        </ul>
+      </div>
+      <div class="plan-card popular selected" id="masterCard" onclick="selectPlan('master',this)">
+        <div class="popular-tag">⭐ Most Popular</div>
+        <div class="plan-name-modal">Master</div>
+        <div class="plan-price-modal">₦1,000<span>/mo</span></div>
+        <ul class="plan-features-modal">
+          <li>Unlimited CBT tests</li>
+          <li>All 10 chapters</li>
+          <li>All audio lessons</li>
+          <li>Priority support</li>
+        </ul>
+      </div>
+    </div>
+    <button class="btn-pay" id="payBtn" onclick="handlePayment()">
+      🔒 Pay with Paystack — ₦1,000
+    </button>
+    <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:10px;">
+      Secure · Card, Bank Transfer &amp; USSD · Cancel anytime
+    </p>
+  </div>
+</div>
+
+<!-- ══════════ CBT MODAL ══════════ -->
+<div class="cbt-modal" id="cbtModal">
+  <div class="cbt-box">
+    <!-- Question screen -->
+    <div id="cbtQuestionScreen">
+      <div class="cbt-header">
+        <h2>CBT Practice Test</h2>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="cbt-timer">⏱ <span id="timerDisplay">02:00</span></div>
+          <button onclick="closeCBT()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--text-muted);line-height:1;">×</button>
+        </div>
+      </div>
+      <div class="q-progress-wrap"><div class="q-progress-bar" id="cbtProgressBar" style="width:0%"></div></div>
+      <div class="q-num" id="qNum">Question 1 of 5</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-options" id="qOptions"></div>
+      <button class="btn-cbt-next" id="cbtNextBtn" disabled onclick="nextQuestion()">Next →</button>
+    </div>
+
+    <!-- Result screen -->
+    <div class="cbt-result" id="cbtResultScreen">
+      <div class="result-icon" id="resultIcon">🎉</div>
+      <div class="result-score-big" id="resultScore"></div>
+      <div class="result-label" id="resultLabel"></div>
+      <div class="result-sub" id="resultSub"></div>
+      <div class="result-actions">
+        <button class="btn-result-retry" onclick="restartCBT()">↺ Try Again</button>
+        <button class="btn-result-upgrade" onclick="closeCBT();openUpgradeModal();">⚡ Upgrade</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ════════════════════════════
+   FIREBASE AUTH GUARD
+════════════════════════════ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD2l4NnlWbQth_d6Ql--JQ4n0Nt4z3n9cg",
+  authDomain: "zenovafreeuser.firebaseapp.com",
+  projectId: "zenovafreeuser",
+  storageBucket: "zenovafreeuser.firebasestorage.app",
+  messagingSenderId: "1025530489227",
+  appId: "1:1025530489227:web:0582edc8ac4d4b9eb7278e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Expose signOut globally for the logout button
+window.doSignOut = () => {
+  signOut(auth).then(() => { window.location.href = 'login.html'; });
+};
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    // Not logged in — redirect to login
+    window.location.href = 'login.html';
+    return;
+  }
+  // Logged in — populate user info
+  const firstName = user.displayName?.split(' ')[0] || 'Student';
+  const fullName  = user.displayName || 'Student';
+  state.user.name  = firstName;
+  state.user.email = user.email;
+
+  document.getElementById('displayName').textContent = fullName;
+  document.getElementById('displayEmail').textContent = user.email;
+  document.getElementById('welcomeMsg').textContent   = `Welcome back, ${firstName}! 👋`;
+});
+
+/* ════════════════════════════
+   STATE — all dynamic data lives here
+════════════════════════════ */
+const state = {
+  user: { name: 'Student', email: '' },
+  stats: { testsTaken: 0, testsPassed: 0, totalScore: 0, streak: 1 },
+  scores: [],
+  cbtUsedToday: false,
+};
+
+/* ════════════════════════════
+   SIDEBAR TOGGLE
+════════════════════════════ */
+let sidebarOpen = false;
+
+function toggleSidebar() {
+  sidebarOpen ? closeSidebar() : openSidebar();
+}
+
+function openSidebar() {
+  sidebarOpen = true;
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('hamburgerBtn').innerHTML = `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>`;
+}
+
+function closeSidebar() {
+  sidebarOpen = false;
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('hamburgerBtn').innerHTML = `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>`;
+}
+
+/* On desktop, sidebar is always visible — only toggle on mobile */
+function handleResize() {
+  if (window.innerWidth > 768) {
+    // desktop: always show, remove mobile-open state
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+    sidebarOpen = false;
+    document.getElementById('topbar').style.left = 'var(--sidebar-w)';
+    document.getElementById('mainContent').style.marginLeft = 'var(--sidebar-w)';
+  } else {
+    document.getElementById('topbar').style.left = '0';
+    document.getElementById('mainContent').style.marginLeft = '0';
+  }
+}
+window.addEventListener('resize', handleResize);
+handleResize();
+
+/* ════════════════════════════
+   ACTIVE NAV
+════════════════════════════ */
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ════════════════════════════
+   DYNAMIC UI UPDATES
+════════════════════════════ */
+function updateDashboard() {
+  const s = state.stats;
+  const scores = state.scores;
+
+  // stat counters
+  animateCounter('statTestsTaken', s.testsTaken);
+  animateCounter('statTestsPassed', s.testsPassed);
+  animateCounter('statStreak', s.streak);
+
+  const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null;
+  document.getElementById('statAvgScore').textContent = avg !== null ? avg+'%' : '—';
+  document.getElementById('bestScore').textContent = scores.length ? Math.max(...scores)+'%' : '—';
+
+  // overall progress (based on avg score)
+  const pct = avg !== null ? avg : 0;
+  document.getElementById('overallPct').textContent = pct + '%';
+  document.getElementById('overallBar').style.width = pct + '%';
+  document.getElementById('progressMsg').textContent =
+    s.testsTaken === 0 ? 'Take your first CBT test to start tracking progress!' :
+    pct >= 80 ? "You're doing great! Keep it up and finish strong. 🔥" :
+    pct >= 60 ? "Good progress! Keep practising to improve your score. 💪" :
+    "Keep going! Consistent practice is the key. 📚";
+
+  // CBT card
+  document.getElementById('cbtStatLabel').textContent = state.cbtUsedToday
+    ? '⛔ Daily limit reached — Upgrade for more'
+    : '1 Free Test Available Today';
+}
+
+function animateCounter(id, target) {
+  const el = document.getElementById(id);
+  const start = parseInt(el.textContent) || 0;
+  if (start === target) return;
+  const step = (target - start) / 20;
+  let cur = start;
+  const t = setInterval(() => {
+    cur += step;
+    if ((step > 0 && cur >= target) || (step < 0 && cur <= target)) {
+      el.textContent = target;
+      clearInterval(t);
+    } else {
+      el.textContent = Math.round(cur);
+    }
+  }, 30);
+}
+
+/* ════════════════════════════
+   UPGRADE MODAL
+════════════════════════════ */
+let selectedPlan = 'master';
+
+function openUpgradeModal() {
+  document.getElementById('upgradeModal').classList.add('open');
+}
+function closeUpgradeModal() {
+  document.getElementById('upgradeModal').classList.remove('open');
+}
+document.getElementById('upgradeModal').addEventListener('click', function(e) {
+  if (e.target === this) closeUpgradeModal();
+});
+
+function selectPlan(plan, el) {
+  selectedPlan = plan;
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const prices = { scholar:'₦500', master:'₦1,000' };
+  document.getElementById('payBtn').textContent = `🔒 Pay with Paystack — ${prices[plan]}`;
+}
+
+function handlePayment() {
+  // ── PAYSTACK INTEGRATION ──
+  // const handler = PaystackPop.setup({
+  //   key: 'YOUR_PAYSTACK_PUBLIC_KEY',
+  //   email: state.user.email,
+  //   amount: selectedPlan === 'scholar' ? 50000 : 100000,
+  //   currency: 'NGN',
+  //   callback: function(response) { console.log('ref:', response.reference); },
+  //   onClose: function() {}
+  // });
+  // handler.openIframe();
+  alert('Add your Paystack public key in the handlePayment() function to activate payments.');
+}
+
+/* ════════════════════════════
+   CBT MODAL
+════════════════════════════ */
+const questions = [
+  { q:"Who is the main protagonist of 'The Lekki Headmaster'?", opts:["Chief Adewole","Mr. Badmus","Alhaji Rasheed","Mrs. Okafor"], ans:1 },
+  { q:"What is the primary setting of the novel?", opts:["Ikeja, Lagos","Lekki Peninsula, Lagos","Abuja","Port Harcourt"], ans:1 },
+  { q:"Which best describes the central theme of the novel?", opts:["Love and Romance","Power, Education and Community","War and Conflict","Religious Faith"], ans:1 },
+  { q:"'The Lekki Headmaster' was written by:", opts:["Chinua Achebe","Wole Soyinka","Kabir Alabi Garba","Chimamanda Ngozi Adichie"], ans:2 },
+  { q:"What does the arrival of the new headmaster represent?", opts:["Corruption in society","Change and disruption of tradition","A love story","Military rule"], ans:1 }
+];
+
+let currentQ=0, selectedAns=null, cbtScore=0, timerInterval, answering=false;
+
+function openCBT() {
+  if (state.cbtUsedToday) { openUpgradeModal(); return; }
+  currentQ=0; cbtScore=0; selectedAns=null; answering=false;
+  document.getElementById('cbtModal').classList.add('open');
+  document.getElementById('cbtResultScreen').classList.remove('show');
+  document.getElementById('cbtResultScreen').style.display='none';
+  document.getElementById('cbtQuestionScreen').style.display='block';
+  renderQuestion();
+  startTimer();
+}
+
+function closeCBT() {
+  document.getElementById('cbtModal').classList.remove('open');
+  clearInterval(timerInterval);
+}
+document.getElementById('cbtModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCBT();
+});
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('qNum').textContent = `Question ${currentQ+1} of ${questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('cbtProgressBar').style.width = `${(currentQ/questions.length)*100}%`;
+  const btn = document.getElementById('cbtNextBtn');
+  btn.disabled = true;
+  btn.textContent = currentQ === questions.length-1 ? 'Finish ✓' : 'Next →';
+  selectedAns = null;
+  answering = false;
+  const opts = document.getElementById('qOptions');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'q-option';
+    div.innerHTML = `<div class="opt-letter">${letters[i]}</div><span>${opt}</span>`;
+    div.onclick = () => { if (!answering) selectAnswer(i, div, q); };
+    opts.appendChild(div);
+  });
+}
+
+function selectAnswer(idx, el, q) {
+  // clear previous
+  document.querySelectorAll('.q-option').forEach(o => {
+    o.classList.remove('selected');
+    o.querySelector('.opt-letter').style.background='';
+    o.querySelector('.opt-letter').style.color='';
+  });
+  el.classList.add('selected');
+  selectedAns = idx;
+  document.getElementById('cbtNextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  if (selectedAns === null) return;
+  answering = true;
+  const q = questions[currentQ];
+  const allOpts = document.querySelectorAll('.q-option');
+  if (selectedAns === q.ans) {
+    allOpts[selectedAns].classList.add('correct'); cbtScore++;
+  } else {
+    allOpts[selectedAns].classList.add('wrong');
+    allOpts[q.ans].classList.add('correct');
+  }
+  document.getElementById('cbtNextBtn').disabled = true;
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < questions.length) { renderQuestion(); }
+    else { showResult(); }
+  }, 900);
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  state.cbtUsedToday = true;
+
+  // Update stats
+  state.stats.testsTaken++;
+  const pct = Math.round((cbtScore/questions.length)*100);
+  state.scores.push(pct);
+  if (pct >= 60) state.stats.testsPassed++;
+
+  document.getElementById('cbtQuestionScreen').style.display='none';
+  const res = document.getElementById('cbtResultScreen');
+  res.style.display='block'; res.classList.add('show');
+  document.getElementById('cbtProgressBar').style.width='100%';
+
+  const scoreEl = document.getElementById('resultScore');
+  scoreEl.textContent = `${cbtScore}/${questions.length}`;
+  scoreEl.style.color = pct>=80?'var(--success)':pct>=60?'var(--gold)':'var(--danger)';
+  document.getElementById('resultIcon').textContent = pct>=80?'🎉':pct>=60?'💪':'📚';
+  document.getElementById('resultLabel').textContent = pct>=80?'Excellent work!':pct>=60?'Good effort!':'Keep practising!';
+  document.getElementById('resultSub').textContent = `You scored ${pct}% (${cbtScore} of ${questions.length} correct). Upgrade for unlimited daily tests!`;
+
+  // Refresh dashboard stats
+  updateDashboard();
+}
+
+function restartCBT() {
+  if (state.cbtUsedToday) { closeCBT(); openUpgradeModal(); return; }
+  currentQ=0; cbtScore=0; selectedAns=null; answering=false;
+  document.getElementById('cbtResultScreen').classList.remove('show');
+  document.getElementById('cbtResultScreen').style.display='none';
+  document.getElementById('cbtQuestionScreen').style.display='block';
+  renderQuestion(); startTimer();
+}
+
+let timeLeft=120;
+function startTimer() {
+  timeLeft=120; clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    const m=String(Math.floor(timeLeft/60)).padStart(2,'0');
+    const s=String(timeLeft%60).padStart(2,'0');
+    document.getElementById('timerDisplay').textContent=`${m}:${s}`;
+    if(timeLeft<=0){ clearInterval(timerInterval); showResult(); }
+  },1000);
+}
+
+/* ════════════════════════════
+   INIT
+════════════════════════════ */
+updateDashboard();
+</script>
+</body>
+</html>

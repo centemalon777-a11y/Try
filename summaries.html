@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zenova – Chapter Summaries</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+:root{
+  --navy:#0D1F4E;
+  --navy-dark:#091539;
+  --navy-mid:#152B6B;
+  --white:#FFFFFF;
+  --bg:#F4F6FB;
+  --border:#E2E8F4;
+  --text:#0D1F4E;
+  --text-body:#4A5578;
+  --text-muted:#8A94B2;
+  --blue-light:#EEF2FF;
+  --accent:#1A56DB;
+  --gold:#F59E0B;
+  --success:#059669;
+  --danger:#DC2626;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 1px 4px rgba(13,31,78,.07),0 4px 16px rgba(13,31,78,.05);
+  --sidebar-w:210px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+h1,h2,h3,h4,h5{font-family:'Sora',sans-serif;}
+
+/* ══ OVERLAY ══ */
+.overlay{display:none;position:fixed;inset:0;z-index:99;background:rgba(9,21,57,.45);backdrop-filter:blur(2px);}
+.overlay.show{display:block;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{width:var(--sidebar-w);background:var(--white);min-height:100vh;display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;border-right:1px solid var(--border);z-index:100;overflow-y:auto;transition:transform .3s cubic-bezier(.4,0,.2,1);}
+.sidebar-logo{padding:20px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);text-decoration:none;}
+.logo-fallback{width:42px;height:42px;border-radius:10px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:18px;font-weight:900;color:white;flex-shrink:0;}
+.logo-name{font-family:'Sora',sans-serif;font-size:17px;font-weight:800;color:var(--navy);letter-spacing:.5px;line-height:1;}
+.logo-sub{font-size:10px;color:var(--text-muted);font-weight:400;margin-top:2px;}
+.sidebar-nav{padding:14px 10px;flex:1;display:flex;flex-direction:column;gap:2px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-sm);color:var(--text-body);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s,color .15s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;}
+.nav-item:hover{background:var(--blue-light);color:var(--navy);}
+.nav-item.active{background:var(--navy);color:var(--white);font-weight:600;}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.7;}
+.nav-item.active svg,.nav-item:hover svg{opacity:1;}
+.sidebar-footer{padding:10px;border-top:1px solid var(--border);}
+
+/* ══ TOPBAR ══ */
+.topbar{position:fixed;left:var(--sidebar-w);right:0;top:0;height:64px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:50;transition:left .3s cubic-bezier(.4,0,.2,1);}
+.hamburger{background:none;border:none;cursor:pointer;color:var(--text);display:flex;align-items:center;padding:6px;border-radius:8px;transition:background .15s;}
+.hamburger:hover{background:var(--blue-light);}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.notif-btn{position:relative;width:40px;height:40px;border-radius:50%;background:var(--blue-light);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--navy);}
+.notif-badge{position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:var(--accent);color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid white;}
+.user-profile{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 10px 6px 6px;border-radius:30px;border:1px solid var(--border);transition:background .15s;}
+.user-profile:hover{background:var(--blue-light);}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.uname{font-size:13.5px;font-weight:700;color:var(--navy);line-height:1.2;}
+.uemail{font-size:11px;color:var(--text-muted);}
+
+/* ══ MAIN ══ */
+.main{margin-left:var(--sidebar-w);margin-top:64px;padding:24px;display:flex;flex-direction:column;gap:20px;min-height:calc(100vh - 64px);transition:margin-left .3s cubic-bezier(.4,0,.2,1);}
+
+/* ══ PAGE HEADER ══ */
+.page-header{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);animation:fadeUp .4s ease both;}
+.ph-left{display:flex;align-items:center;gap:16px;}
+.ph-icon{width:52px;height:52px;border-radius:14px;background:var(--navy);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ph-icon svg{width:26px;height:26px;color:white;}
+.ph-title{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:3px;}
+.ph-sub{font-size:13px;color:var(--text-muted);}
+.ph-stats{display:flex;gap:24px;flex-shrink:0;}
+.ph-stat{text-align:center;}
+.ph-stat-val{font-size:22px;font-weight:900;color:var(--navy);font-family:'Sora',sans-serif;line-height:1.1;}
+.ph-stat-label{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.ph-divider{width:1px;height:40px;background:var(--border);}
+
+/* ══ FREE TRIAL BANNER ══ */
+.trial-banner{background:linear-gradient(135deg,#FFF7ED,#FFFBEB);border:1.5px solid #FED7AA;border-radius:var(--radius);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;animation:fadeUp .4s .05s ease both;}
+.trial-banner-text{flex:1;}
+.trial-banner-text strong{font-size:14px;font-weight:700;color:#92400E;display:block;margin-bottom:2px;}
+.trial-banner-text span{font-size:12.5px;color:#B45309;}
+.btn-trial-upgrade{padding:10px 20px;background:var(--navy);border:none;border-radius:var(--radius-sm);color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:background .15s,transform .1s;}
+.btn-trial-upgrade:hover{background:var(--navy-mid);transform:translateY(-1px);}
+
+/* ══ CHAPTERS GRID ══ */
+.chapters-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+
+/* ══ CHAPTER CARD ══ */
+.chapter-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;animation:fadeUp .4s ease both;transition:transform .15s,box-shadow .15s;}
+.chapter-card:hover{transform:translateY(-2px);box-shadow:0 4px 24px rgba(13,31,78,.11);}
+.chapter-card.locked{opacity:.75;}
+
+.chapter-card:nth-child(1){animation-delay:.05s;}
+.chapter-card:nth-child(2){animation-delay:.10s;}
+.chapter-card:nth-child(3){animation-delay:.13s;}
+.chapter-card:nth-child(4){animation-delay:.16s;}
+.chapter-card:nth-child(5){animation-delay:.19s;}
+.chapter-card:nth-child(6){animation-delay:.22s;}
+.chapter-card:nth-child(7){animation-delay:.25s;}
+.chapter-card:nth-child(8){animation-delay:.28s;}
+.chapter-card:nth-child(9){animation-delay:.31s;}
+.chapter-card:nth-child(10){animation-delay:.34s;}
+.chapter-card:nth-child(11){animation-delay:.37s;}
+.chapter-card:nth-child(12){animation-delay:.40s;}
+
+/* Card top band */
+.card-band{height:6px;background:var(--navy);}
+.chapter-card.locked .card-band{background:var(--border);}
+.card-band.done{background:var(--success);}
+.card-band.in-progress{background:var(--accent);}
+
+/* Card body */
+.card-body{padding:18px 20px 14px;}
+.card-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.chapter-num{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;}
+.chapter-title{font-size:15px;font-weight:800;color:var(--navy);line-height:1.3;}
+.card-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.badge-free{background:#DCFCE7;color:#065F46;}
+.badge-locked{background:var(--bg);color:var(--text-muted);border:1px solid var(--border);}
+.badge-done{background:#DCFCE7;color:#065F46;}
+.badge-progress{background:var(--blue-light);color:var(--accent);}
+
+.chapter-summary-text{font-size:13px;color:var(--text-body);line-height:1.55;margin-bottom:14px;}
+
+/* Audio player */
+.audio-section{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+.audio-label{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.audio-label svg{width:14px;height:14px;}
+.audio-controls{display:flex;align-items:center;gap:10px;}
+.play-btn{width:36px;height:36px;border-radius:50%;background:var(--navy);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s,transform .1s;}
+.play-btn:hover{background:var(--navy-mid);transform:scale(1.07);}
+.play-btn svg{width:15px;height:15px;color:white;}
+.chapter-card.locked .play-btn{background:var(--text-muted);cursor:not-allowed;}
+.chapter-card.locked .play-btn:hover{transform:none;}
+.audio-progress-wrap{flex:1;display:flex;flex-direction:column;gap:5px;}
+.audio-track{width:100%;height:5px;background:var(--border);border-radius:3px;overflow:hidden;cursor:pointer;position:relative;}
+.audio-fill{height:100%;border-radius:3px;background:var(--navy);width:0%;transition:width .3s;}
+.chapter-card.locked .audio-fill{background:var(--text-muted);}
+.audio-time-row{display:flex;justify-content:space-between;}
+.audio-time{font-size:10px;color:var(--text-muted);font-weight:600;font-family:'Sora',sans-serif;}
+.lock-audio-msg{font-size:11.5px;color:var(--text-muted);display:flex;align-items:center;gap:5px;}
+.lock-audio-msg svg{width:13px;height:13px;}
+
+/* Card actions */
+.card-actions{display:flex;gap:8px;}
+.btn-quiz{flex:1;padding:11px;background:var(--navy);border:none;border-radius:var(--radius-sm);color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s,transform .1s;}
+.btn-quiz:hover{background:var(--navy-mid);transform:translateY(-1px);}
+.btn-quiz svg{width:15px;height:15px;}
+.chapter-card.locked .btn-quiz{background:var(--text-muted);cursor:not-allowed;}
+.chapter-card.locked .btn-quiz:hover{transform:none;background:var(--text-muted);}
+.btn-unlock{flex:1;padding:11px;background:transparent;border:1.5px solid var(--gold);border-radius:var(--radius-sm);color:#92400E;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s,transform .1s;}
+.btn-unlock:hover{background:#FFFBEB;transform:translateY(-1px);}
+.btn-unlock svg{width:15px;height:15px;}
+.btn-read{width:100%;padding:11px;background:var(--blue-light);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--navy);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s,border-color .15s,transform .1s;margin-bottom:8px;}
+.btn-read:hover{background:#dde6ff;border-color:var(--accent);transform:translateY(-1px);}
+.btn-read svg{width:15px;height:15px;}
+.chapter-card.locked .btn-read{background:var(--bg);color:var(--text-muted);border-color:var(--border);cursor:not-allowed;}
+.chapter-card.locked .btn-read:hover{transform:none;background:var(--bg);}
+
+/* ══ CHAPTER DETAIL MODAL ══ */
+.chapter-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(9,21,57,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
+.chapter-modal.open{display:flex;}
+.chapter-modal-box{background:white;border-radius:20px;max-width:640px;width:100%;box-shadow:0 20px 70px rgba(13,31,78,.25);animation:fadeUp .35s ease both;position:relative;max-height:88vh;overflow-y:auto;}
+.chapter-modal-band{height:8px;background:var(--navy);border-radius:20px 20px 0 0;}
+.chapter-modal-body{padding:32px;}
+.cm-num{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;}
+.cm-title{font-size:24px;font-weight:900;color:var(--navy);margin-bottom:16px;line-height:1.25;}
+.cm-section-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.cm-section-label svg{width:13px;height:13px;}
+.cm-text{font-size:14.5px;color:var(--text-body);line-height:1.7;margin-bottom:22px;}
+.cm-key-points{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+.cm-key-points li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--text-body);line-height:1.5;}
+.cm-key-points li::before{content:'→';color:var(--accent);font-weight:900;flex-shrink:0;margin-top:1px;}
+.cm-themes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+.cm-theme-tag{background:var(--blue-light);color:var(--accent);font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;}
+.cm-actions{display:flex;gap:10px;}
+.cm-btn-quiz{flex:1;padding:13px;background:var(--navy);border:none;border-radius:var(--radius-sm);color:white;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,transform .1s;}
+.cm-btn-quiz:hover{background:var(--navy-mid);transform:translateY(-1px);}
+.cm-btn-close{padding:13px 20px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text-body);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
+.cm-btn-close:hover{background:var(--border);}
+
+/* ══ QUIZ MODAL ══ */
+.quiz-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(9,21,57,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
+.quiz-modal.open{display:flex;}
+.quiz-box{background:white;border-radius:20px;padding:32px;max-width:560px;width:100%;box-shadow:0 20px 70px rgba(13,31,78,.25);animation:fadeUp .35s ease both;position:relative;max-height:90vh;overflow-y:auto;}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.quiz-header h2{font-size:18px;font-weight:800;color:var(--navy);}
+.quiz-chapter-label{font-size:12px;color:var(--text-muted);margin-bottom:16px;}
+.quiz-timer{display:flex;align-items:center;gap:6px;background:#FEF3C7;border-radius:8px;padding:7px 14px;font-size:14px;font-weight:700;color:#92400E;font-family:'Sora',sans-serif;}
+.q-progress-wrap{background:var(--border);border-radius:4px;height:6px;margin-bottom:16px;overflow:hidden;}
+.q-progress-bar{height:100%;border-radius:4px;background:var(--navy);transition:width .4s ease;}
+.q-num{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:8px;}
+.q-text{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:18px;line-height:1.45;}
+.q-options{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+.q-option{padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:14px;color:var(--text-body);font-weight:500;display:flex;align-items:center;gap:10px;transition:border-color .15s,background .15s;}
+.q-option:hover{border-color:var(--navy);background:var(--blue-light);}
+.q-option.selected{border-color:var(--accent);background:var(--blue-light);color:var(--navy);font-weight:700;}
+.q-option.correct{border-color:var(--success);background:#DCFCE7;color:#065F46;}
+.q-option.wrong{border-color:var(--danger);background:#FEE2E2;color:#991B1B;}
+.opt-letter{width:28px;height:28px;border-radius:6px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;transition:background .15s,color .15s;}
+.q-option.selected .opt-letter{background:var(--accent);color:white;}
+.q-option.correct .opt-letter{background:var(--success);color:white;}
+.q-option.wrong .opt-letter{background:var(--danger);color:white;}
+.btn-next{width:100%;padding:13px;background:var(--navy);border:none;border-radius:10px;color:white;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s,background .15s;}
+.btn-next:disabled{opacity:.35;cursor:not-allowed;}
+.btn-next:not(:disabled):hover{background:var(--navy-mid);}
+.modal-close{position:absolute;top:16px;right:18px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-muted);transition:color .15s;line-height:1;}
+.modal-close:hover{color:var(--navy);}
+
+/* Result */
+.quiz-result{display:none;text-align:center;}
+.quiz-result.show{display:block;}
+.result-icon{font-size:52px;margin-bottom:10px;}
+.result-score-big{font-size:54px;font-weight:900;font-family:'Sora',sans-serif;line-height:1;margin-bottom:6px;}
+.result-label{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.result-sub{font-size:13.5px;color:var(--text-muted);margin-bottom:24px;}
+.result-actions{display:flex;gap:10px;}
+.btn-result-retry{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:10px;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--navy);font-family:'DM Sans',sans-serif;}
+.btn-result-done{flex:1;padding:12px;background:var(--navy);border:none;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700;color:white;font-family:'DM Sans',sans-serif;}
+
+/* Upgrade modal */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(9,21,57,.6);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:24px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:white;border-radius:20px;padding:36px 32px;max-width:520px;width:100%;box-shadow:0 20px 70px rgba(13,31,78,.22);animation:fadeUp .3s ease both;position:relative;}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.plan-card{border:2px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .15s;position:relative;}
+.plan-card:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:var(--shadow);}
+.plan-card.selected{border-color:var(--navy);box-shadow:0 0 0 3px rgba(13,31,78,.1);}
+.plan-card.popular{border-color:var(--gold);}
+.plan-card.popular.selected{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,158,11,.15);}
+.popular-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:#1C0B00;font-size:10px;font-weight:800;padding:3px 12px;border-radius:20px;white-space:nowrap;}
+.plan-name-modal{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+.plan-price-modal{font-size:22px;font-weight:900;color:var(--navy);font-family:'Sora',sans-serif;margin-bottom:10px;}
+.plan-price-modal span{font-size:12px;font-weight:400;color:var(--text-muted);}
+.plan-features-modal{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.plan-features-modal li{font-size:12.5px;color:var(--text-body);display:flex;align-items:center;gap:7px;}
+.plan-features-modal li::before{content:'✓';color:var(--success);font-weight:700;flex-shrink:0;}
+.btn-pay{width:100%;padding:14px;background:var(--navy);border:none;border-radius:var(--radius-sm);color:white;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,transform .1s;}
+.btn-pay:hover{background:var(--navy-mid);transform:translateY(-1px);}
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1024px){.chapters-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){
+  .sidebar{transform:translateX(calc(-1 * var(--sidebar-w)));transition:transform .3s cubic-bezier(.4,0,.2,1);}
+  .sidebar.open{transform:translateX(0);}
+  .topbar{left:0 !important;}
+  .main{margin-left:0 !important;padding:16px;}
+  .ph-stats{display:none;}
+  .plans-grid{grid-template-columns:1fr;}
+  .modal-box{padding:28px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <a href="dashboard-free.html" class="sidebar-logo">
+    <img src="1.png" style="width:42px;height:42px;object-fit:contain;border-radius:10px;flex-shrink:0;"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+    <div class="logo-fallback" style="display:none;">Z</div>
+    <div>
+      <div class="logo-name">ZENOVA</div>
+      <div class="logo-sub">Master Lekki Headmaster</div>
+    </div>
+  </a>
+  <nav class="sidebar-nav">
+    <a href="dashboard-free.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a href="dashboard-free.html" class="nav-item" onclick="closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      CBT Practice
+    </a>
+    <button class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Summaries
+    </button>
+    <a href="chapter-detail.html?ch=1" class="nav-item" onclick="closeSidebar();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+      Audio Lessons
+    </a>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Progress
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      Bookmarks
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Performance
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M4.93 19.07a10 10 0 0 0 14.14 0"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+      Settings
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      Help &amp; Support
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="login.html" class="nav-item" style="color:var(--text-muted);">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar" id="topbar">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Toggle menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <span style="font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--navy);">Chapter Summaries</span>
+  </div>
+  <div class="topbar-right">
+    <button class="notif-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="notif-badge">3</div>
+    </button>
+    <div class="user-profile">
+      <div class="user-avatar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div>
+        <div class="uname">Emmanuel</div>
+        <div class="uemail">emmanuel@gmail.com</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="ph-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <div>
+        <div class="ph-title">The Lekki Headmaster</div>
+        <div class="ph-sub">12 chapters · Audio + Quiz for each chapter</div>
+      </div>
+    </div>
+    <div class="ph-stats">
+      <div class="ph-stat">
+        <div class="ph-stat-val">1</div>
+        <div class="ph-stat-label">Unlocked</div>
+      </div>
+      <div class="ph-divider"></div>
+      <div class="ph-stat">
+        <div class="ph-stat-val">0</div>
+        <div class="ph-stat-label">Completed</div>
+      </div>
+      <div class="ph-divider"></div>
+      <div class="ph-stat">
+        <div class="ph-stat-val">0%</div>
+        <div class="ph-stat-label">Progress</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trial Banner -->
+  <div class="trial-banner">
+    <div style="font-size:22px;">⚠️</div>
+    <div class="trial-banner-text">
+      <strong>Only Chapter 1 is unlocked on the Free Trial</strong>
+      <span>Upgrade to Scholar or Master to access all 12 chapters, audios, and unlimited quizzes.</span>
+    </div>
+    <button class="btn-trial-upgrade" onclick="openUpgradeModal()">⚡ Upgrade Now →</button>
+  </div>
+
+  <!-- Chapters Grid -->
+  <div class="chapters-grid" id="chaptersGrid"></div>
+
+</main>
+
+<!-- ══ CHAPTER DETAIL MODAL ══ -->
+<div class="chapter-modal" id="chapterModal">
+  <div class="chapter-modal-box">
+    <button class="modal-close" onclick="closeChapterModal()" style="top:20px;right:20px;z-index:2;">✕</button>
+    <div class="chapter-modal-band" id="cmBand"></div>
+    <div class="chapter-modal-body">
+      <div class="cm-num" id="cmNum"></div>
+      <div class="cm-title" id="cmTitle"></div>
+      <div class="cm-section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Chapter Summary
+      </div>
+      <div class="cm-text" id="cmText"></div>
+      <div class="cm-section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Key Points
+      </div>
+      <ul class="cm-key-points" id="cmKeyPoints"></ul>
+      <div class="cm-section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Themes
+      </div>
+      <div class="cm-themes" id="cmThemes"></div>
+      <div class="cm-actions">
+        <button class="cm-btn-close" onclick="closeChapterModal()">← Back</button>
+        <button class="cm-btn-quiz" id="cmQuizBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+          Take Chapter Quiz
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ QUIZ MODAL ══ -->
+<div class="quiz-modal" id="quizModal">
+  <div class="quiz-box">
+    <button class="modal-close" onclick="closeQuiz()">✕</button>
+    <div id="quizQuestionScreen">
+      <div class="quiz-header">
+        <h2 id="quizTitle">Chapter Quiz</h2>
+        <div class="quiz-timer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="quizTimer">02:00</span>
+        </div>
+      </div>
+      <div class="quiz-chapter-label" id="quizChapterLabel"></div>
+      <div class="q-progress-wrap"><div class="q-progress-bar" id="quizProgressBar" style="width:0%"></div></div>
+      <div class="q-num" id="quizQNum">Question 1 of 5</div>
+      <div class="q-text" id="quizQText"></div>
+      <div class="q-options" id="quizQOptions"></div>
+      <button class="btn-next" id="quizNextBtn" onclick="nextQuizQuestion()" disabled>Next →</button>
+    </div>
+    <div class="quiz-result" id="quizResultScreen">
+      <div class="result-icon" id="quizResultIcon">🎉</div>
+      <div class="result-score-big" id="quizResultScore">5/5</div>
+      <div class="result-label" id="quizResultLabel">Excellent work!</div>
+      <div class="result-sub" id="quizResultSub"></div>
+      <div class="result-actions">
+        <button class="btn-result-retry" onclick="retryQuiz()">↺ Try Again</button>
+        <button class="btn-result-done" onclick="closeQuiz()">✓ Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ UPGRADE MODAL ══ -->
+<div class="modal-overlay" id="upgradeModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeUpgradeModal()">✕</button>
+    <h2 style="font-size:22px;font-weight:900;color:var(--navy);margin-bottom:6px;">Unlock All Chapters 🚀</h2>
+    <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:24px;">Get unlimited access to all 12 chapters, audio lessons, and daily CBT tests.</p>
+    <div class="plans-grid">
+      <div class="plan-card" onclick="selectPlan('scholar',this)">
+        <div class="plan-name-modal">Scholar</div>
+        <div class="plan-price-modal">₦500 <span>/month</span></div>
+        <ul class="plan-features-modal">
+          <li>All 12 Chapter Summaries</li>
+          <li>All Audio Lessons</li>
+          <li>5 CBT Tests / day</li>
+          <li>Progress Tracking</li>
+        </ul>
+      </div>
+      <div class="plan-card popular selected" onclick="selectPlan('master',this)">
+        <div class="popular-tag">⭐ BEST VALUE</div>
+        <div class="plan-name-modal">Master</div>
+        <div class="plan-price-modal">₦1,000 <span>/month</span></div>
+        <ul class="plan-features-modal">
+          <li>Everything in Scholar</li>
+          <li>Unlimited CBT Tests</li>
+          <li>JAMB Past Questions</li>
+          <li>Priority Support</li>
+        </ul>
+      </div>
+    </div>
+    <button class="btn-pay" id="payBtn" onclick="handlePayment()">🔒 Pay with Paystack — ₦1,000</button>
+  </div>
+</div>
+
+<script>
+/* ════ DATA ════ */
+const chapters = [
+  {
+    num:1, title:"The Arrival", free:true,
+    summary:"Mr. Badmus, a disciplined and reform-minded educator, arrives at Lekki Grammar School as the new headmaster. His first day immediately reveals the deeply entrenched disorder — lateness, torn uniforms, and a casual staff — that he is determined to transform. The tension between old habits and new authority is set in motion from the very first scene.",
+    keyPoints:["Mr. Badmus arrives at Lekki Grammar School as new headmaster","He immediately notices widespread disorder: lateness, untidy uniforms, undisciplined staff","His arrival signals a clash between old habits and a new, strict authority","The tone of the entire novel — reform versus resistance — is established here","Key character introductions set up the central conflicts to come"],
+    themes:["Authority & Leadership","Change vs Tradition","First Impressions","Institutional Disorder"],
+    audio:"Chapter 1 Audio — Mr. Badmus arrives, clash with first impressions.",
+    questions:[
+      {q:"What is the name of the new headmaster in the novel?",opts:["Mr. Okonkwo","Mr. Badmus","Alhaji Rasheed","Chief Adewole"],ans:1},
+      {q:"Where does the novel's main action take place?",opts:["Ikeja Grammar School","Lekki Grammar School","Surulere High School","Badagry College"],ans:1},
+      {q:"What is the dominant mood on Mr. Badmus' first day?",opts:["Joy and celebration","Tension and disorder","Peace and cooperation","Fear and violence"],ans:1},
+      {q:"Which best describes Mr. Badmus' character at his introduction?",opts:["Lazy and corrupt","Disciplined and reform-minded","Timid and unsure","Wealthy and arrogant"],ans:1},
+      {q:"Who wrote 'The Lekki Headmaster'?",opts:["Chinua Achebe","Wole Soyinka","Kabir Alabi Garba","Chimamanda Ngozi Adichie"],ans:2},
+    ]
+  },
+  {
+    num:2, title:"The Staff Room Conspiracy", free:false,
+    summary:"Senior teachers who benefited under the previous regime begin to resist the new headmaster's reforms. Covert meetings in the staff room reveal jealousy, self-interest, and a coordinated effort to undermine Mr. Badmus. The theme of institutional corruption and loyalty is explored through the behaviour of key staff members.",
+    keyPoints:["Senior teachers hold secret meetings to plan resistance","Their motive is self-interest — they thrived under the old, corrupt system","Mr. Adeyemi emerges as the most vocal critic of the new headmaster","The staff room becomes a symbol of institutional rot and conspiracy","The chapter reveals how deeply entrenched corruption can be within an organisation"],
+    themes:["Institutional Corruption","Self-Interest","Resistance to Reform","Betrayal"],
+    audio:"Chapter 2 Audio — Staff resistance and secret plots begin.",
+    questions:[
+      {q:"Why do senior teachers resist Mr. Badmus?",opts:["They want more holidays","They fear losing their privileges","They dislike his teaching style","They prefer a female headmaster"],ans:1},
+      {q:"Where do the teachers plan their resistance?",opts:["The classrooms","The staff room","The principal's office","Outside the school gate"],ans:1},
+      {q:"What theme does Chapter 2 primarily explore?",opts:["Young love","Institutional corruption","Natural disaster","Religious faith"],ans:1},
+      {q:"The staff's behaviour in Chapter 2 represents:",opts:["Loyalty to students","Self-interest and jealousy","Admiration for change","Fear of the government"],ans:1},
+      {q:"Which character is most vocal against Mr. Badmus in this chapter?",opts:["Mr. Adeyemi","The school clerk","Alhaji Rasheed","Mrs. Okafor"],ans:0},
+    ]
+  },
+  {
+    num:3, title:"The Students Speak", free:false,
+    summary:"The student body reacts with mixed emotions to the new headmaster. While some admire his resolve, others feel threatened by strict enforcement of rules they had grown comfortable ignoring. A student representative steps up as an unexpected bridge between the pupils and the controversial new administration.",
+    keyPoints:["Students are divided — some admire Mr. Badmus, others fear his strict rules","Years of lax discipline meant students grew comfortable breaking the rules","A student representative emerges as a voice of reason and dialogue","The chapter shows the unintended consequences of long-tolerated disorder","Youth perspective adds a new dimension to the reform narrative"],
+    themes:["Youth & Voice","Discipline vs Freedom","Consequence of Neglect","Bridge-Building"],
+    audio:"Chapter 3 Audio — Students react; a voice of reason emerges.",
+    questions:[
+      {q:"How do most students initially feel about Mr. Badmus?",opts:["Fully supportive","Mixed — some admire, some fear","Completely hostile","Indifferent"],ans:1},
+      {q:"What role does the student representative play?",opts:["Organises a strike","Bridges students and administration","Joins the teachers' conspiracy","Leaves the school"],ans:1},
+      {q:"What rules had students grown comfortable ignoring?",opts:["Sports rules","School discipline rules","Canteen rules","Library rules"],ans:1},
+      {q:"The student reactions in Chapter 3 symbolise:",opts:["National politics","Resistance to change","Young love","Economic hardship"],ans:1},
+      {q:"Which literary device is used most in Chapter 3?",opts:["Flashback","Dramatic irony","Symbolism","Hyperbole"],ans:2},
+    ]
+  },
+  {
+    num:4, title:"Community Pressure", free:false,
+    summary:"Parents and community leaders begin to interfere in the school's affairs. Some support the new order while influential figures — motivated by personal gain — pressure the headmaster to compromise his standards. This chapter examines how external social forces shape institutions and test integrity.",
+    keyPoints:["Community leaders enter the school's affairs for the first time","Some parents genuinely support Mr. Badmus' reform agenda","Powerful figures pressure him to lower his standards for personal benefit","Mr. Badmus resists external pressure, maintaining his principles","The chapter shows how societal forces threaten institutional reform"],
+    themes:["External Pressure","Integrity","Community & Institution","Social Forces"],
+    audio:"Chapter 4 Audio — Parents and community leaders enter the conflict.",
+    questions:[
+      {q:"What motivates influential community figures to pressure Mr. Badmus?",opts:["Love for education","Personal gain","National policy","Religious belief"],ans:1},
+      {q:"What does community interference represent thematically?",opts:["External social forces","Natural progression","Student activism","Political revolution"],ans:0},
+      {q:"Which group supports Mr. Badmus in this chapter?",opts:["All teachers","Concerned parents","Government officials","No one"],ans:1},
+      {q:"How does Mr. Badmus respond to the community pressure?",opts:["He resigns immediately","He compromises fully","He holds firm to his standards","He flees"],ans:2},
+      {q:"Chapter 4's central conflict is between:",opts:["Two teachers","Integrity and compromise","A student and teacher","Government and school"],ans:1},
+    ]
+  },
+  {
+    num:5, title:"Secrets of the School", free:false,
+    summary:"Long-buried secrets about the school's finances and past administration surface. Mr. Badmus discovers evidence of embezzlement that implicates several teachers and a former official. His decision about what to do with this knowledge forms the moral crux of this pivotal chapter.",
+    keyPoints:["Mr. Badmus uncovers financial records showing years of embezzlement","Several current teachers and a former official are implicated","He faces a moral dilemma: expose the truth or protect the institution's reputation","The chapter reveals how corruption was systemic, not isolated","His decision sets up the major confrontation of the second half of the novel"],
+    themes:["Corruption","Moral Dilemma","Truth & Accountability","Institutional Secrets"],
+    audio:"Chapter 5 Audio — Hidden truths about the school's dark past.",
+    questions:[
+      {q:"What does Mr. Badmus discover in Chapter 5?",opts:["A hidden library","Evidence of embezzlement","A love letter","A student cheat scheme"],ans:1},
+      {q:"Who is implicated by the financial evidence?",opts:["Only students","Several teachers and a former official","The government","Community leaders"],ans:1},
+      {q:"What is the moral crux of Chapter 5?",opts:["Whether to punish students","What to do with damaging evidence","Whether to expand the school","How to hire new teachers"],ans:1},
+      {q:"'Embezzlement' means:",opts:["Physical theft by force","Misappropriation of funds in one's care","Blackmail of a colleague","Destruction of property"],ans:1},
+      {q:"This chapter primarily explores the theme of:",opts:["Romance","Corruption and moral responsibility","War","Supernatural events"],ans:1},
+    ]
+  },
+  {
+    num:6, title:"A Teacher's Betrayal", free:false,
+    summary:"Mr. Adeyemi, whom Mr. Badmus had trusted as an ally, secretly leaks confidential school information to the opposition. The betrayal is a personal and professional blow. The author uses this chapter to explore themes of loyalty, friendship, and the cost of blind trust within an institution.",
+    keyPoints:["Mr. Adeyemi leaks confidential information to the anti-reform faction","Mr. Badmus had treated him as his closest ally among the staff","The betrayal is both personal and professionally damaging","The chapter explores the danger of misplaced trust in institutions","It raises questions about who can truly be trusted in a corrupt environment"],
+    themes:["Betrayal","Trust & Loyalty","Friendship","Political Manipulation"],
+    audio:"Chapter 6 Audio — Trust is shattered; betrayal hits closest to home.",
+    questions:[
+      {q:"Who betrays Mr. Badmus in Chapter 6?",opts:["A student","Mr. Adeyemi","The school clerk","Alhaji Rasheed"],ans:1},
+      {q:"What does Mr. Adeyemi leak?",opts:["Students' exam scores","Confidential school information","Mr. Badmus's personal diary","Sports results"],ans:1},
+      {q:"What themes does Chapter 6 primarily explore?",opts:["Romance and adventure","Loyalty, friendship, and blind trust","Economic hardship","Religious conflict"],ans:1},
+      {q:"Mr. Badmus had previously considered Mr. Adeyemi as:",opts:["A troublemaker","An enemy","A trusted ally","An indifferent colleague"],ans:2},
+      {q:"The betrayal in Chapter 6 is significant because:",opts:["It is funny","It is personal and professional","It is unimportant","It involves students"],ans:1},
+    ]
+  },
+  {
+    num:7, title:"The Inspector's Visit", free:false,
+    summary:"A government school inspector arrives for an unannounced assessment. The visit throws the school into chaos and exposes the divide between staff who support reform and those who sabotage it. The inspector's report has potential consequences for Mr. Badmus' tenure at the school.",
+    keyPoints:["An unannounced government inspector arrives mid-term","The visit causes panic among the corrupt staff faction","Supporters of reform work hard to show the school's improvements","The division between pro- and anti-reform staff is fully exposed","The inspector's report could determine Mr. Badmus' future at the school"],
+    themes:["External Scrutiny","Accountability","Reform Under Pressure","Institutional Politics"],
+    audio:"Chapter 7 Audio — Unannounced inspection throws the school into chaos.",
+    questions:[
+      {q:"Who arrives in Chapter 7?",opts:["A new student","A government school inspector","A journalist","The school's founder"],ans:1},
+      {q:"What type of visit does the inspector make?",opts:["Planned and formal","Unannounced","During holidays","At night"],ans:1},
+      {q:"What does the visit expose?",opts:["Student bravery","The divide between reform supporters and saboteurs","The school's wealth","Good teaching"],ans:1},
+      {q:"The inspector's report could affect:",opts:["The students' fees","Mr. Badmus' tenure","The school timetable","The canteen menu"],ans:1},
+      {q:"The inspector's visit serves as a narrative device to:",opts:["Add romance","Raise the stakes of the reform conflict","Introduce a new character arc","End the novel"],ans:1},
+    ]
+  },
+  {
+    num:8, title:"The Strike", free:false,
+    summary:"Disgruntled teachers orchestrate a work stoppage that halts school activities. Students are caught in the crossfire. The chapter highlights the suffering of innocent parties when institutional power struggles escalate beyond dialogue. Mr. Badmus must navigate the crisis without capitulating.",
+    keyPoints:["Disgruntled teachers organise an illegal work stoppage","Students miss classes and exams — the biggest innocent victims","Mr. Badmus refuses to give in to the strikers' demands","The strike reveals how power struggles harm the most vulnerable","Community pressure mounts on both sides to end the standoff"],
+    themes:["Conflict Escalation","Innocent Suffering","Power & Responsibility","Resilience"],
+    audio:"Chapter 8 Audio — Teachers strike; students suffer the consequences.",
+    questions:[
+      {q:"Who organises the work stoppage in Chapter 8?",opts:["Students","Disgruntled teachers","Parents","The government"],ans:1},
+      {q:"Who suffers most from the strike?",opts:["The headmaster","The teachers","The students","The community"],ans:2},
+      {q:"What does the strike highlight thematically?",opts:["Love and sacrifice","Suffering caused by power struggles","Economic growth","Environmental issues"],ans:1},
+      {q:"How does Mr. Badmus respond to the crisis?",opts:["He joins the strike","He closes the school permanently","He navigates it without capitulating","He flees the country"],ans:2},
+      {q:"A 'work stoppage' is also known as:",opts:["A holiday","A promotion","A strike","A transfer"],ans:2},
+    ]
+  },
+  {
+    num:9, title:"The Headmaster's Past", free:false,
+    summary:"Through a series of flashbacks, the reader learns about Mr. Badmus' childhood in poverty and his determination to use education as a tool for social upliftment. His past explains his uncompromising stance in the present. This backstory deepens reader sympathy and understanding of his motivations.",
+    keyPoints:["Flashbacks reveal Mr. Badmus grew up in deep poverty","Education was his only pathway out of difficult circumstances","His personal history explains why he refuses to tolerate mediocrity","The chapter humanises him, transforming him from authority figure to relatable hero","Readers gain a deeper understanding of his uncompromising position"],
+    themes:["Poverty & Education","Personal History","Motivation","Social Mobility"],
+    audio:"Chapter 9 Audio — Flashbacks reveal what shaped Mr. Badmus.",
+    questions:[
+      {q:"How is Mr. Badmus' past revealed in Chapter 9?",opts:["Through a dream","Through flashbacks","Through a letter","Through another character"],ans:1},
+      {q:"What was Mr. Badmus' background?",opts:["Wealthy and privileged","Poverty and hardship","Military service","Political activism"],ans:1},
+      {q:"What does Mr. Badmus see education as?",opts:["A means to power","A social upliftment tool","A business","A burden"],ans:1},
+      {q:"What literary device is prominently used in Chapter 9?",opts:["Personification","Flashback","Allegory","Onomatopoeia"],ans:1},
+      {q:"The backstory in Chapter 9 primarily serves to:",opts:["Slow the story down","Deepen sympathy for Mr. Badmus","Introduce a new character","End a subplot"],ans:1},
+    ]
+  },
+  {
+    num:10, title:"Turning Point", free:false,
+    summary:"A dramatic confrontation between Mr. Badmus and the ring-leaders of the opposition comes to a head. Alliances shift as some teachers who previously opposed him recognise the sincerity of his vision and switch sides. The balance of power in the school begins to tilt in favour of genuine reform.",
+    keyPoints:["Mr. Badmus directly confronts the ring-leaders of the opposition","The confrontation is public, forcing everyone to take a clear stance","Several wavering teachers switch sides, recognising his genuine vision","The balance of power shifts significantly toward reform for the first time","This is the novel's clearest turning point — hope becomes tangible"],
+    themes:["Turning Point","Moral Courage","Shifting Alliances","Hope for Reform"],
+    audio:"Chapter 10 Audio — The tide turns; alliances shift dramatically.",
+    questions:[
+      {q:"What happens in the key confrontation of Chapter 10?",opts:["Mr. Badmus resigns","The ring-leaders are exposed and alliances shift","A student wins a debate","The school burns down"],ans:1},
+      {q:"Why do some opponents switch sides?",opts:["They are bribed","They recognise Mr. Badmus' sincerity","They are threatened","They lose interest"],ans:1},
+      {q:"'Turning point' in literature refers to:",opts:["The end of a story","The moment the central conflict begins to resolve","The introduction of a new character","A change in setting"],ans:1},
+      {q:"The balance of power in Chapter 10 tilts towards:",opts:["The corrupt teachers","Genuine reform","The government","The students alone"],ans:1},
+      {q:"Chapter 10's tone can best be described as:",opts:["Hopeless and dark","Hopeful and decisive","Romantic and light","Comic and ironic"],ans:1},
+    ]
+  },
+  {
+    num:11, title:"Justice and Reckoning", free:false,
+    summary:"The corrupt teachers face accountability. Some are transferred, others quietly resign. The school's finances are audited and those found culpable are exposed. Mr. Badmus' methods are vindicated, though the process is portrayed as imperfect — justice, the author suggests, is always partial in a flawed system.",
+    keyPoints:["A formal audit exposes the financial misconduct of several teachers","Some corrupt staff are transferred; others resign before facing charges","Mr. Badmus' long campaign for accountability is officially vindicated","The author portrays justice as partial — not everyone faces full consequences","The chapter is a sobering reminder that systems change slowly and imperfectly"],
+    themes:["Justice","Accountability","Imperfect Systems","Vindication"],
+    audio:"Chapter 11 Audio — Accountability arrives; justice is served imperfectly.",
+    questions:[
+      {q:"What happens to corrupt teachers in Chapter 11?",opts:["They are promoted","Some are transferred, others resign","They are arrested","Nothing happens"],ans:1},
+      {q:"What process validates Mr. Badmus' concerns about school finance?",opts:["A student survey","An audit","A newspaper report","A court case"],ans:1},
+      {q:"How does the author portray justice in Chapter 11?",opts:["Perfect and complete","Partial and imperfect","Non-existent","Swift and total"],ans:1},
+      {q:"What message does the author convey about systems?",opts:["Systems are always fair","Systems are flawed but can improve","Systems never change","Systems are irrelevant"],ans:1},
+      {q:"'Reckoning' in Chapter 11 refers to:",opts:["A maths lesson","A day of accountability","A school competition","A financial reward"],ans:1},
+    ]
+  },
+  {
+    num:12, title:"A New Dawn", free:false,
+    summary:"The novel concludes with the school transformed — not perfectly, but meaningfully. Students are engaged, the remaining staff are committed, and the community has rallied. Mr. Badmus reflects on the journey and the work still ahead. The ending is hopeful but realistic, a testament to the power and limits of individual determination.",
+    keyPoints:["The school shows real, measurable improvement in discipline and results","Students are now engaged and proud of their school","The remaining staff are committed to the new standards","Mr. Badmus reflects on what was achieved and what still needs work","The novel ends on a hopeful but honest note — change is possible but never complete"],
+    themes:["Hope & Realism","Transformation","Legacy","The Limits of Determination"],
+    audio:"Chapter 12 Audio — The school is transformed; a hopeful but honest ending.",
+    questions:[
+      {q:"How is the school described at the end of Chapter 12?",opts:["Completely perfect","Meaningfully transformed but imperfect","Abandoned and closed","Worse than before"],ans:1},
+      {q:"What is the overall tone of the novel's conclusion?",opts:["Tragic and bitter","Hopeful but realistic","Purely romantic","Angry and unresolved"],ans:1},
+      {q:"What does the ending suggest about individual determination?",opts:["It is always enough","It has power but also limits","It is useless","It requires violence"],ans:1},
+      {q:"'A New Dawn' as a chapter title is an example of:",opts:["Onomatopoeia","Symbolism","Simile","Alliteration"],ans:1},
+      {q:"The central message of 'The Lekki Headmaster' is best summarised as:",opts:["Never trust teachers","Power and education can reform society but face resistance","Love conquers all","Money is the root of all evil"],ans:1},
+    ]
+  }
+];
+
+/* ════ RENDER CHAPTERS ════ */
+function renderChapters() {
+  const grid = document.getElementById('chaptersGrid');
+  grid.innerHTML = '';
+  chapters.forEach(ch => {
+    const locked = !ch.free;
+    const card = document.createElement('div');
+    card.className = `chapter-card${locked ? ' locked' : ''}`;
+    card.innerHTML = `
+      <div class="card-band ${locked ? '' : 'in-progress'}"></div>
+      <div class="card-body">
+        <div class="card-top-row">
+          <div>
+            <div class="chapter-num">Chapter ${ch.num} of 12</div>
+            <div class="chapter-title">${ch.title}</div>
+          </div>
+          <div class="card-badge ${locked ? 'badge-locked' : 'badge-free'}">
+            ${locked
+              ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Locked`
+              : `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 15l-3-3 1.5-1.5L11 12l4-4L16.5 9.5z"/></svg> Free`}
+          </div>
+        </div>
+
+        <div class="chapter-summary-text">${ch.summary}</div>
+
+        <!-- Audio -->
+        <div class="audio-section">
+          <div class="audio-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            Audio Lesson
+          </div>
+          ${locked
+            ? `<div class="lock-audio-msg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Upgrade to unlock audio lesson</div>`
+            : `<div class="audio-controls">
+                <button class="play-btn" id="playBtn${ch.num}" onclick="togglePlay(${ch.num})" title="Play audio">
+                  <svg id="playIcon${ch.num}" viewBox="0 0 24 24" fill="white" stroke="none"><polygon points="5,3 19,12 5,21"/></svg>
+                </button>
+                <div class="audio-progress-wrap">
+                  <div class="audio-track" onclick="seekAudio(${ch.num}, event)">
+                    <div class="audio-fill" id="audioFill${ch.num}"></div>
+                  </div>
+                  <div class="audio-time-row">
+                    <span class="audio-time" id="audioCurrentTime${ch.num}">0:00</span>
+                    <span class="audio-time" id="audioDesc${ch.num}">${ch.audio}</span>
+                    <span class="audio-time">3:45</span>
+                  </div>
+                </div>
+              </div>`
+          }
+        </div>
+
+        <!-- Read Chapter Button -->
+        <button class="btn-read" onclick="${locked ? 'openUpgradeModal()' : `window.location.href='chapter-detail.html?ch=${ch.num}'`}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          ${locked ? `🔒 Read Chapter ${ch.num}` : `📖 Read Chapter ${ch.num}`}
+        </button>
+
+        <!-- Actions -->
+        <div class="card-actions">
+          <button class="btn-quiz" onclick="${locked ? 'openUpgradeModal()' : `openQuiz(${ch.num - 1})`}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            ${locked ? '🔒 Take Quiz' : 'Take Chapter Quiz'}
+          </button>
+          ${locked ? `<button class="btn-unlock" onclick="openUpgradeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 15l-3-3 1.5-1.5L11 12l4-4 1.5 1.5z"/></svg>Unlock →</button>` : ''}
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ════ FAKE AUDIO PLAYER ════ */
+const audioStates = {};
+chapters.filter(c => c.free).forEach(c => {
+  audioStates[c.num] = { playing: false, progress: 0, interval: null };
+});
+
+function togglePlay(num) {
+  const state = audioStates[num];
+  if (!state) return;
+  if (state.playing) {
+    pauseAudio(num);
+  } else {
+    playAudio(num);
+  }
+}
+function playAudio(num) {
+  const state = audioStates[num];
+  state.playing = true;
+  const icon = document.getElementById('playIcon' + num);
+  icon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+  state.interval = setInterval(() => {
+    state.progress += 100/225; // 3:45 = 225s
+    if (state.progress >= 100) { state.progress = 100; pauseAudio(num); return; }
+    updateAudioUI(num);
+  }, 1000);
+}
+function pauseAudio(num) {
+  const state = audioStates[num];
+  state.playing = false;
+  clearInterval(state.interval);
+  const icon = document.getElementById('playIcon' + num);
+  if (icon) icon.innerHTML = '<polygon points="5,3 19,12 5,21"/>';
+}
+function seekAudio(num, e) {
+  const state = audioStates[num];
+  if (!state) return;
+  const track = e.currentTarget;
+  const rect = track.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+  state.progress = pct;
+  updateAudioUI(num);
+}
+function updateAudioUI(num) {
+  const state = audioStates[num];
+  const fill = document.getElementById('audioFill' + num);
+  const timeEl = document.getElementById('audioCurrentTime' + num);
+  if (fill) fill.style.width = state.progress + '%';
+  if (timeEl) {
+    const totalSec = Math.round((state.progress / 100) * 225);
+    const m = Math.floor(totalSec / 60);
+    const s = String(totalSec % 60).padStart(2, '0');
+    timeEl.textContent = `${m}:${s}`;
+  }
+}
+
+/* ════ CHAPTER DETAIL MODAL ════ */
+let currentReadChapter = 0;
+
+function openChapterModal(idx) {
+  currentReadChapter = idx;
+  const ch = chapters[idx];
+  document.getElementById('cmNum').textContent = `Chapter ${ch.num} of 12`;
+  document.getElementById('cmTitle').textContent = ch.title;
+  document.getElementById('cmText').textContent = ch.summary;
+
+  const kpList = document.getElementById('cmKeyPoints');
+  kpList.innerHTML = '';
+  ch.keyPoints.forEach(pt => {
+    const li = document.createElement('li');
+    li.textContent = pt;
+    kpList.appendChild(li);
+  });
+
+  const themesEl = document.getElementById('cmThemes');
+  themesEl.innerHTML = '';
+  ch.themes.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'cm-theme-tag';
+    span.textContent = t;
+    themesEl.appendChild(span);
+  });
+
+  const quizBtn = document.getElementById('cmQuizBtn');
+  quizBtn.onclick = () => { closeChapterModal(); openQuiz(idx); };
+
+  document.getElementById('chapterModal').classList.add('open');
+}
+
+function closeChapterModal() {
+  document.getElementById('chapterModal').classList.remove('open');
+}
+document.getElementById('chapterModal').addEventListener('click', function(e) {
+  if (e.target === this) closeChapterModal();
+});
+
+/* ════ QUIZ LOGIC ════ */
+let currentChapterIdx = 0, quizQ = 0, quizAns = null, quizScore = 0, quizAnswering = false, quizTimer, quizTimeLeft = 120;
+
+function openQuiz(chapterIndex) {
+  currentChapterIdx = chapterIndex;
+  quizQ = 0; quizScore = 0; quizAns = null; quizAnswering = false;
+  const ch = chapters[chapterIndex];
+  document.getElementById('quizTitle').textContent = `Chapter ${ch.num} Quiz`;
+  document.getElementById('quizChapterLabel').textContent = `"${ch.title}" — 5 questions`;
+  document.getElementById('quizModal').classList.add('open');
+  document.getElementById('quizResultScreen').classList.remove('show');
+  document.getElementById('quizResultScreen').style.display = 'none';
+  document.getElementById('quizQuestionScreen').style.display = 'block';
+  renderQuizQuestion();
+  startQuizTimer();
+}
+function closeQuiz() {
+  document.getElementById('quizModal').classList.remove('open');
+  clearInterval(quizTimer);
+}
+document.getElementById('quizModal').addEventListener('click', function(e) {
+  if (e.target === this) closeQuiz();
+});
+
+function renderQuizQuestion() {
+  const q = chapters[currentChapterIdx].questions[quizQ];
+  document.getElementById('quizQNum').textContent = `Question ${quizQ + 1} of 5`;
+  document.getElementById('quizQText').textContent = q.q;
+  document.getElementById('quizProgressBar').style.width = `${(quizQ / 5) * 100}%`;
+  const btn = document.getElementById('quizNextBtn');
+  btn.disabled = true;
+  btn.textContent = quizQ === 4 ? 'Finish ✓' : 'Next →';
+  quizAns = null; quizAnswering = false;
+  const opts = document.getElementById('quizQOptions');
+  opts.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'q-option';
+    div.innerHTML = `<div class="opt-letter">${letters[i]}</div><span>${opt}</span>`;
+    div.onclick = () => { if (!quizAnswering) selectQuizAnswer(i, div, q); };
+    opts.appendChild(div);
+  });
+}
+
+function selectQuizAnswer(idx, el, q) {
+  document.querySelectorAll('#quizQOptions .q-option').forEach(o => {
+    o.classList.remove('selected');
+    o.querySelector('.opt-letter').style.background = '';
+    o.querySelector('.opt-letter').style.color = '';
+  });
+  el.classList.add('selected');
+  quizAns = idx;
+  document.getElementById('quizNextBtn').disabled = false;
+}
+
+function nextQuizQuestion() {
+  if (quizAns === null) return;
+  quizAnswering = true;
+  const q = chapters[currentChapterIdx].questions[quizQ];
+  const allOpts = document.querySelectorAll('#quizQOptions .q-option');
+  if (quizAns === q.ans) { allOpts[quizAns].classList.add('correct'); quizScore++; }
+  else { allOpts[quizAns].classList.add('wrong'); allOpts[q.ans].classList.add('correct'); }
+  document.getElementById('quizNextBtn').disabled = true;
+  setTimeout(() => {
+    quizQ++;
+    if (quizQ < 5) { renderQuizQuestion(); }
+    else { showQuizResult(); }
+  }, 900);
+}
+
+function showQuizResult() {
+  clearInterval(quizTimer);
+  document.getElementById('quizQuestionScreen').style.display = 'none';
+  const res = document.getElementById('quizResultScreen');
+  res.style.display = 'block'; res.classList.add('show');
+  document.getElementById('quizProgressBar').style.width = '100%';
+  const pct = Math.round((quizScore / 5) * 100);
+  const scoreEl = document.getElementById('quizResultScore');
+  scoreEl.textContent = `${quizScore}/5`;
+  scoreEl.style.color = pct >= 80 ? 'var(--success)' : pct >= 60 ? 'var(--gold)' : 'var(--danger)';
+  document.getElementById('quizResultIcon').textContent = pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚';
+  document.getElementById('quizResultLabel').textContent = pct >= 80 ? 'Excellent work!' : pct >= 60 ? 'Good effort!' : 'Keep practising!';
+  document.getElementById('quizResultSub').textContent = `You scored ${pct}% — ${quizScore} of 5 correct on Chapter ${chapters[currentChapterIdx].num}: "${chapters[currentChapterIdx].title}".`;
+}
+
+function retryQuiz() {
+  quizQ = 0; quizScore = 0; quizAns = null; quizAnswering = false;
+  document.getElementById('quizResultScreen').classList.remove('show');
+  document.getElementById('quizResultScreen').style.display = 'none';
+  document.getElementById('quizQuestionScreen').style.display = 'block';
+  renderQuizQuestion(); startQuizTimer();
+}
+
+function startQuizTimer() {
+  quizTimeLeft = 120; clearInterval(quizTimer);
+  quizTimer = setInterval(() => {
+    quizTimeLeft--;
+    const m = String(Math.floor(quizTimeLeft / 60)).padStart(2, '0');
+    const s = String(quizTimeLeft % 60).padStart(2, '0');
+    document.getElementById('quizTimer').textContent = `${m}:${s}`;
+    if (quizTimeLeft <= 0) { clearInterval(quizTimer); showQuizResult(); }
+  }, 1000);
+}
+
+/* ════ UPGRADE MODAL ════ */
+let selectedPlan = 'master';
+function openUpgradeModal() { document.getElementById('upgradeModal').classList.add('open'); }
+function closeUpgradeModal() { document.getElementById('upgradeModal').classList.remove('open'); }
+document.getElementById('upgradeModal').addEventListener('click', function(e) { if (e.target === this) closeUpgradeModal(); });
+function selectPlan(plan, el) {
+  selectedPlan = plan;
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const prices = { scholar: '₦500', master: '₦1,000' };
+  document.getElementById('payBtn').textContent = `🔒 Pay with Paystack — ${prices[plan]}`;
+}
+function handlePayment() {
+  alert('Add your Paystack public key in the handlePayment() function to activate payments.');
+}
+
+/* ════ SIDEBAR ════ */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+/* ════ INIT ════ */
+renderChapters();
+</script>
+</body>
+</html>

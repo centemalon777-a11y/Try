@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zenova – Master the Lekki Headmaster | JAMB 2025/2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy:       #0B2559;
+    --navy-dark:  #071840;
+    --navy-mid:   #163275;
+    --navy-light: #1E3F8A;
+    --accent:     #1D4ED8;
+    --accent-bright: #3B82F6;
+    --gold:       #D97706;
+    --gold-light: #F59E0B;
+    --white:      #FFFFFF;
+    --off-white:  #F5F7FF;
+    --surface:    #EEF2FF;
+    --border:     #D1D9F0;
+    --text-main:  #0B2559;
+    --text-body:  #374270;
+    --text-muted: #6B7BAD;
+    --radius:     14px;
+    --radius-sm:  8px;
+    --shadow-sm:  0 2px 12px rgba(11,37,89,0.08);
+    --shadow-md:  0 6px 32px rgba(11,37,89,0.12);
+    --shadow-lg:  0 16px 60px rgba(11,37,89,0.16);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text-main);
+    overflow-x: hidden;
+    line-height: 1.65;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Sora', sans-serif; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 6%;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo img {
+    height: 42px; width: 42px;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+  .logo-fallback {
+    height: 42px; width: 42px;
+    background: var(--navy);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .logo-text .brand {
+    font-family: 'Sora', sans-serif;
+    font-size: 18px; font-weight: 800;
+    color: var(--navy); letter-spacing: 1px;
+  }
+  .logo-text .tagline { font-size: 10px; color: var(--text-muted); line-height: 1; }
+
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a {
+    color: var(--text-body); text-decoration: none;
+    font-size: 14px; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--navy); }
+
+  .nav-cta { display: flex; gap: 10px; align-items: center; }
+  .btn-ghost {
+    padding: 9px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--navy); font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); background: var(--surface); }
+
+  .btn-nav-primary {
+    padding: 9px 22px;
+    background: var(--navy); border: none;
+    border-radius: var(--radius-sm);
+    color: white; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-nav-primary:hover { background: var(--navy-light); transform: translateY(-1px); }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-mid) 100%);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 120px 6% 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 50% 0%, rgba(59,130,246,0.2) 0%, transparent 65%),
+      radial-gradient(ellipse 35% 35% at 85% 75%, rgba(245,158,11,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* dot grid texture */
+  .hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+
+  .hero > * { position: relative; z-index: 1; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 30px; padding: 7px 18px;
+    font-size: 12px; font-weight: 700; color: #93C5FD;
+    letter-spacing: 0.8px; margin-bottom: 28px;
+    animation: fadeDown 0.6s ease both;
+  }
+  .hero-badge .dot { width: 6px; height: 6px; background: #60A5FA; border-radius: 50%; animation: pulse 1.5s infinite; display: inline-block; }
+
+  .hero h1 {
+    font-size: clamp(34px, 5.5vw, 68px);
+    font-weight: 800; line-height: 1.08;
+    letter-spacing: -1px; color: white;
+    max-width: 840px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero h1 .gold { color: var(--gold-light); }
+  .hero h1 .blue { color: #93C5FD; }
+
+  .hero-sub {
+    font-size: clamp(15px, 1.8vw, 18px);
+    color: rgba(255,255,255,0.72);
+    max-width: 580px; margin: 22px auto 16px;
+    animation: fadeUp 0.7s 0.18s ease both;
+  }
+
+  .hero-jamb-tag {
+    display: inline-block;
+    background: var(--gold-light);
+    color: #7C2D12;
+    font-size: 12px; font-weight: 800;
+    padding: 5px 14px; border-radius: 30px;
+    margin-bottom: 28px; letter-spacing: 0.5px;
+    animation: fadeUp 0.7s 0.24s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.32s ease both;
+  }
+  .btn-hero-white {
+    padding: 15px 36px;
+    background: white; border: none;
+    border-radius: 10px; color: var(--navy);
+    font-family: 'Sora', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .btn-hero-white:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.25); }
+
+  .btn-hero-outline {
+    padding: 15px 36px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-radius: 10px; color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-hero-outline:hover { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.07); }
+
+  .hero-stats {
+    display: flex; gap: 50px; justify-content: center; flex-wrap: wrap;
+    margin-top: 64px; padding-top: 48px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .hero-stat .num { font-family: 'Sora', sans-serif; font-size: 32px; font-weight: 800; color: white; }
+  .hero-stat .num em { color: var(--gold-light); font-style: normal; }
+  .hero-stat .lbl { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+
+  /* ─── NOVEL ABOUT STRIP ─── */
+  .about-strip {
+    background: var(--off-white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 6%;
+  }
+  .about-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
+  }
+  .about-book {
+    background: linear-gradient(145deg, var(--navy), var(--navy-mid));
+    border-radius: 20px;
+    padding: 36px 32px;
+    color: white;
+    box-shadow: var(--shadow-lg);
+    position: relative; overflow: hidden;
+  }
+  .about-book::before {
+    content: '📚';
+    position: absolute; right: -10px; bottom: -16px;
+    font-size: 100px; opacity: 0.08;
+  }
+  .about-book .book-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    color: #93C5FD; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .about-book h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+  .about-book .author { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 18px; }
+  .about-book p { font-size: 14px; color: rgba(255,255,255,0.78); line-height: 1.7; }
+  .about-book .year-tag {
+    display: inline-block; margin-top: 18px;
+    background: var(--gold-light); color: #7C2D12;
+    font-size: 11px; font-weight: 800; padding: 5px 14px; border-radius: 20px;
+  }
+
+  .about-text h2 { font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 14px; }
+  .about-text p { font-size: 15px; color: var(--text-body); margin-bottom: 18px; line-height: 1.75; }
+
+  .themes-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;
+  }
+  .theme-tag {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 9px 12px;
+    font-size: 13px; font-weight: 500; color: var(--navy);
+  }
+  .theme-tag .ti { color: var(--accent); font-size: 15px; }
+
+  /* ─── WHAT TO STUDY ─── */
+  .study-section {
+    background: var(--navy-dark);
+    padding: 90px 6%;
+    color: white;
+  }
+  .study-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px; max-width: 1100px; margin: 0 auto;
+  }
+  .study-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius); padding: 26px 24px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .study-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(59,130,246,0.35); transform: translateY(-3px); }
+  .study-card .icon { font-size: 26px; margin-bottom: 14px; }
+  .study-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: white; }
+  .study-card p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.65; }
+
+  /* ─── FEATURES ─── */
+  #features { background: var(--white); padding: 90px 6%; }
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  .feature-card {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px 26px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover {
+    border-color: var(--accent-bright);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .feature-icon {
+    width: 50px; height: 50px;
+    background: var(--navy); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 18px;
+  }
+  .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--navy); }
+  .feature-card p { font-size: 14px; color: var(--text-body); line-height: 1.65; }
+  .feature-tag {
+    display: inline-block; margin-top: 14px;
+    font-size: 11px; font-weight: 700;
+    color: var(--accent); background: var(--surface);
+    padding: 4px 10px; border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  #how { background: var(--navy); padding: 90px 6%; }
+  #how .section-label { color: #93C5FD; }
+  #how .section-title { color: white; }
+  #how .section-sub { color: rgba(255,255,255,0.6); }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0; max-width: 900px; margin: 0 auto; position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute; top: 28px; left: 14%; right: 14%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  }
+  .step { text-align: center; padding: 0 20px; }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 800;
+    color: white; margin: 0 auto 20px; position: relative; z-index: 1;
+  }
+  .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: white; }
+  .step p { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+  /* ─── PRICING ─── */
+  #pricing { background: var(--off-white); padding: 90px 6%; }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px; max-width: 980px; margin: 0 auto; align-items: start;
+  }
+  .pricing-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 18px; padding: 32px 28px;
+    position: relative; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-sm);
+  }
+  .pricing-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .pricing-card.featured {
+    background: var(--navy);
+    border-color: var(--navy);
+    transform: scale(1.04);
+    box-shadow: var(--shadow-lg);
+  }
+  .pricing-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+
+  .popular-badge {
+    position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+    background: var(--gold-light); color: #7C2D12;
+    font-size: 11px; font-weight: 800; padding: 5px 18px;
+    border-radius: 30px; white-space: nowrap; letter-spacing: 0.5px;
+  }
+
+  .plan-name { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  .pricing-card.featured .plan-name { color: #93C5FD; }
+
+  .plan-price { font-family: 'Sora', sans-serif; font-size: 48px; font-weight: 800; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+  .pricing-card.featured .plan-price { color: white; }
+  .plan-price sup { font-size: 20px; vertical-align: super; color: var(--text-muted); }
+  .pricing-card.featured .plan-price sup { color: rgba(255,255,255,0.6); }
+  .plan-price sub { font-size: 14px; font-weight: 400; color: var(--text-muted); vertical-align: baseline; margin-left: 2px; }
+  .pricing-card.featured .plan-price sub { color: rgba(255,255,255,0.5); }
+
+  .plan-desc { font-size: 13px; color: var(--text-body); margin: 8px 0 22px; padding-bottom: 20px; border-bottom: 1px solid var(--border); line-height: 1.55; }
+  .pricing-card.featured .plan-desc { color: rgba(255,255,255,0.65); border-bottom-color: rgba(255,255,255,0.12); }
+
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 28px; }
+  .plan-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-body); }
+  .pricing-card.featured .plan-features li { color: rgba(255,255,255,0.8); }
+  .plan-features li .check { color: #16A34A; font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .pricing-card.featured .plan-features li .check { color: #86EFAC; }
+  .plan-features li .cross { color: var(--text-muted); font-size: 15px; flex-shrink: 0; opacity: 0.5; margin-top: 1px; }
+  .plan-features li.locked { opacity: 0.4; }
+
+  .btn-plan { width: 100%; padding: 13px; border-radius: 10px; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-plan-navy { background: var(--navy); border: none; color: white; }
+  .btn-plan-navy:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .btn-plan-white { background: white; border: none; color: var(--navy); box-shadow: 0 4px 18px rgba(0,0,0,0.15); }
+  .btn-plan-white:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); }
+  .btn-plan-gold { background: var(--gold-light); border: none; color: #7C2D12; }
+  .btn-plan-gold:hover { background: #FCD34D; transform: translateY(-1px); }
+
+  /* ─── TESTIMONIALS ─── */
+  #testimonials { background: white; padding: 90px 6%; }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; max-width: 1000px; margin: 0 auto;
+  }
+  .tcard {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 26px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .tcard:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .tcard-stars { font-size: 14px; color: var(--gold-light); margin-bottom: 12px; }
+  .tcard-quote { font-size: 14px; color: var(--text-body); line-height: 1.75; margin-bottom: 18px; font-style: italic; }
+  .tcard-author { display: flex; align-items: center; gap: 10px; }
+  .tcard-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 700; color: white; }
+  .tcard-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+  .tcard-role { font-size: 11px; color: var(--text-muted); }
+
+  /* ─── FAQ ─── */
+  #faq { background: var(--navy-dark); padding: 90px 6%; }
+  #faq .section-label { color: #93C5FD; }
+  #faq .section-title { color: white; }
+  #faq .section-sub { color: rgba(255,255,255,0.55); }
+  .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+  .faq-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm); overflow: hidden; }
+  .faq-q { padding: 17px 20px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: white; user-select: none; }
+  .faq-q:hover { color: #93C5FD; }
+  .faq-q .arrow { transition: transform 0.25s; font-size: 20px; color: rgba(255,255,255,0.4); flex-shrink: 0; }
+  .faq-item.open .faq-q .arrow { transform: rotate(45deg); color: #93C5FD; }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.7; padding: 0 20px; }
+  .faq-item.open .faq-a { max-height: 200px; padding: 0 20px 18px; }
+
+  /* ─── CTA ─── */
+  .cta-section { background: var(--off-white); padding: 80px 6%; }
+  .cta-box {
+    max-width: 760px; margin: 0 auto;
+    background: linear-gradient(145deg, var(--navy), var(--navy-mid));
+    border-radius: 24px; padding: 60px 48px; text-align: center;
+    box-shadow: var(--shadow-lg);
+    position: relative; overflow: hidden;
+  }
+  .cta-box::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .cta-box > * { position: relative; z-index: 1; }
+  .cta-box h2 { font-size: clamp(24px, 4vw, 40px); font-weight: 800; color: white; margin-bottom: 14px; }
+  .cta-box p { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+  .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta-note { margin-top: 18px; font-size: 12px; color: rgba(255,255,255,0.45); }
+
+  /* ─── SECTION HELPERS ─── */
+  .section-label { text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 2.5px; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
+  .section-title { text-align: center; font-size: clamp(26px, 4vw, 44px); font-weight: 800; line-height: 1.15; max-width: 640px; margin: 0 auto 12px; color: var(--navy); }
+  .section-sub { text-align: center; font-size: 16px; color: var(--text-body); max-width: 520px; margin: 0 auto 52px; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--navy-dark);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 56px 6% 32px;
+    color: rgba(255,255,255,0.7);
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 40px;
+  }
+  .footer-brand-col .brand { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800; color: white; letter-spacing: 1px; }
+  .footer-brand-col .sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; margin-bottom: 16px; }
+  .footer-brand-col p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.65; max-width: 240px; }
+
+  .footer-col h4 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; color: white; margin-bottom: 16px; letter-spacing: 0.5px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul li a {
+    font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+  }
+  .footer-col ul li a:hover { color: white; }
+  .footer-col ul li a .fi { font-size: 15px; }
+
+  .social-links { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .social-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; color: rgba(255,255,255,0.6);
+    font-size: 17px; text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .social-btn:hover { border-color: rgba(255,255,255,0.4); color: white; background: rgba(255,255,255,0.07); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+  .reveal { opacity:0; transform:translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { padding: 100px 5% 60px; }
+    .hero-stats { gap: 26px; }
+    .steps::before { display: none; }
+    .steps { gap: 32px; }
+    .about-inner { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .pricing-card.featured { transform: none; }
+    .pricing-card.featured:hover { transform: translateY(-4px); }
+    .cta-box { padding: 40px 24px; }
+  }
+  @media (max-width: 480px) {
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="logo">
+    <img src="1.png" alt="Zenova Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+    <div class="logo-fallback" style="display:none;">📘</div>
+    <div class="logo-text">
+      <div class="brand">ZENOVA</div>
+      <div class="tagline">Master the Lekki Headmaster</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About the Novel</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="login.html" class="btn-ghost" style="text-decoration:none;">Log In</a>
+    <a href="signup.html" class="btn-nav-primary" style="text-decoration:none;">Start Free →</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>&nbsp; Official JAMB 2025/2026 Novel Platform
+  </div>
+  <h1>
+    Master <span class="gold">The Lekki Headmaster</span><br/>
+    <span class="blue">Ace Your JAMB</span> Use of English
+  </h1>
+  <p class="hero-sub">
+    The complete study platform for Kabir Alabi Garba's official JAMB novel — CBT practice tests, chapter summaries, character analysis, themes, and audio lessons. Everything you need, in one place.
+  </p>
+  <div class="hero-jamb-tag">📖 JAMB UTME Use of English — Set Novel 2025/2026</div>
+  <div class="hero-actions">
+    <a href="signup.html" class="btn-hero-white">Start for Free →</a>
+    <a href="#about" class="btn-hero-outline">About the Novel</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="num">2,<em>400+</em></div>
+      <div class="lbl">Students Enrolled</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">98<em>%</em></div>
+      <div class="lbl">Pass Rate</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">10<em>+</em></div>
+      <div class="lbl">Chapter Summaries</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">₦<em>500</em></div>
+      <div class="lbl">Starting Plan</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT THE NOVEL ── -->
+<section class="about-strip" id="about">
+  <div class="about-inner">
+    <div class="about-book reveal">
+      <div class="book-label">Official JAMB Set Novel</div>
+      <h3>The Lekki Headmaster</h3>
+      <div class="author">Written by Kabir Alabi Garba</div>
+      <p>
+        The story follows Mr. Bepo, a respected school principal (headmaster), and explores the challenges, experiences, and realities of life in modern Nigeria — particularly in the Lekki area of Lagos. A deeply inspiring story of leadership, sacrifice, and community.
+      </p>
+      <span class="year-tag">📌 JAMB UTME 2025/2026</span>
+    </div>
+    <div class="about-text reveal" style="transition-delay:0.15s">
+      <h2>What the Novel Teaches</h2>
+      <p>
+        JAMB sets questions from this novel every year. Students are expected to know the characters, key events, chapter summaries, themes, and lessons — and be able to answer exam-style questions under timed conditions.
+      </p>
+      <div class="themes-grid">
+        <div class="theme-tag">🎓 Education & Leadership</div>
+        <div class="theme-tag">🤝 Integrity & Honesty</div>
+        <div class="theme-tag">💪 Hard Work & Perseverance</div>
+        <div class="theme-tag">👨‍👩‍👧 Family & Community</div>
+        <div class="theme-tag">📉 Social & Economic Challenges</div>
+        <div class="theme-tag">🧑‍🎓 Youth Development</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT TO STUDY ── -->
+<section class="study-section">
+  <div class="section-label" style="color:#93C5FD;">What to Study</div>
+  <h2 class="section-title" style="color:white;">Everything JAMB Will Ask You</h2>
+  <p class="section-sub" style="color:rgba(255,255,255,0.55);">Zenova covers every topic JAMB examiners focus on from The Lekki Headmaster.</p>
+  <div class="study-grid">
+    <div class="study-card reveal"><div class="icon">📄</div><h3>Chapter Summaries</h3><p>Clear, concise summaries of every chapter so you understand the plot without reading the full text every time.</p></div>
+    <div class="study-card reveal" style="transition-delay:.08s"><div class="icon">👥</div><h3>Character Analysis</h3><p>Detailed breakdown of Mr. Bepo and every key character — their roles, personality traits, and significance to the story.</p></div>
+    <div class="study-card reveal" style="transition-delay:.16s"><div class="icon">💡</div><h3>Themes & Lessons</h3><p>In-depth notes on all major themes: leadership, integrity, discipline, perseverance, community — exactly what JAMB tests.</p></div>
+    <div class="study-card reveal" style="transition-delay:.24s"><div class="icon">💬</div><h3>Important Quotes</h3><p>Key quotes and passages from the novel with explanations — the type of lines JAMB loves to set comprehension questions on.</p></div>
+    <div class="study-card reveal" style="transition-delay:.32s"><div class="icon">📋</div><h3>CBT Practice Tests</h3><p>Timed, JAMB-style multiple choice questions based on the novel. Get your score instantly and see where to improve.</p></div>
+    <div class="study-card reveal" style="transition-delay:.40s"><div class="icon">🎧</div><h3>Audio Summaries</h3><p>Listen to each chapter summary as an audio lesson. Study on the go — commuting, resting, or before bed.</p></div>
+  </div>
+</section>
+
+<!-- ── PLATFORM FEATURES ── -->
+<section id="features">
+  <div class="section-label">Platform Features</div>
+  <h2 class="section-title">Built for JAMB Candidates</h2>
+  <p class="section-sub">A complete study experience from chapter one to exam day.</p>
+  <div class="features-grid">
+    <div class="feature-card reveal"><div class="feature-icon">📋</div><h3>CBT Practice Engine</h3><p>Timed MCQ tests mirroring the real JAMB format. Track your scores after each attempt and see a full breakdown of right and wrong answers.</p><span class="feature-tag">Unlimited tests on Master Plan</span></div>
+    <div class="feature-card reveal" style="transition-delay:.1s"><div class="feature-icon">📖</div><h3>Chapter Summaries</h3><p>Structured written summaries of every chapter of The Lekki Headmaster — easy to read, easy to remember.</p><span class="feature-tag">All 10 chapters on Master</span></div>
+    <div class="feature-card reveal" style="transition-delay:.2s"><div class="feature-icon">🎧</div><h3>Audio Lessons</h3><p>High-quality audio summaries for every chapter. Perfect for auditory learners or studying on the move.</p><span class="feature-tag">Full audio on Master Plan</span></div>
+    <div class="feature-card reveal" style="transition-delay:.3s"><div class="feature-icon">📊</div><h3>Progress Dashboard</h3><p>See your test scores, chapters completed, average score, and daily study streak — all from your personal dashboard.</p><span class="feature-tag">Real-time analytics</span></div>
+    <div class="feature-card reveal" style="transition-delay:.4s"><div class="feature-icon">🔖</div><h3>Bookmarks & Notes</h3><p>Save chapters and questions for revision. Build your own personalised study list and return to tough topics anytime.</p><span class="feature-tag">All plans</span></div>
+    <div class="feature-card reveal" style="transition-delay:.5s"><div class="feature-icon">🔥</div><h3>Daily Study Streaks</h3><p>Stay consistent with streak tracking. Every day you study counts — build the habit and watch your performance climb.</p><span class="feature-tag">All plans</span></div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">From Sign Up to Exam Ready</h2>
+  <p class="section-sub">Getting started on Zenova takes under 2 minutes.</p>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <h3>Create Your Account</h3>
+      <p>Sign up with your email for free. No credit card required. Your free trial starts immediately.</p>
+    </div>
+    <div class="step reveal" style="transition-delay:.15s">
+      <div class="step-num">2</div>
+      <h3>Pick Your Plan</h3>
+      <p>Choose Starter (free), Scholar (₦500/mo), or Master (₦1,000/mo). Pay with card, bank transfer, or USSD via Paystack.</p>
+    </div>
+    <div class="step reveal" style="transition-delay:.3s">
+      <div class="step-num">3</div>
+      <h3>Study & Pass</h3>
+      <p>Access your CBT tests, chapter summaries, and audio lessons. Track your progress and walk into JAMB confident.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Simple Pricing for Every Student</h2>
+  <p class="section-sub">Start free. Upgrade when you're ready. Cancel anytime — no hidden charges.</p>
+  <div class="pricing-grid">
+
+    <div class="pricing-card reveal">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price">Free</div>
+      <div class="plan-desc">Try Zenova before you commit. Explore the platform with no risk.</div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> 1 CBT practice test</li>
+        <li><span class="check">✓</span> 1 chapter summary</li>
+        <li><span class="check">✓</span> 1 audio lesson</li>
+        <li><span class="check">✓</span> Progress dashboard</li>
+        <li class="locked"><span class="cross">✕</span> Daily test access</li>
+        <li class="locked"><span class="cross">✕</span> Full chapter library</li>
+        <li class="locked"><span class="cross">✕</span> All audio lessons</li>
+      </ul>
+      <button class="btn-plan btn-plan-navy" onclick="window.location.href='signup.html'">Get Started Free</button>
+    </div>
+
+    <div class="pricing-card featured reveal" style="transition-delay:.12s">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="plan-name">Scholar</div>
+      <div class="plan-price"><sup>₦</sup>500<sub>/mo</sub></div>
+      <div class="plan-desc">For serious JAMB candidates. Daily practice and solid content access.</div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> 1 CBT practice test per day</li>
+        <li><span class="check">✓</span> 5 chapter summaries</li>
+        <li><span class="check">✓</span> 5 audio lessons</li>
+        <li><span class="check">✓</span> 5 CBT summary tests</li>
+        <li><span class="check">✓</span> Progress tracker & streaks</li>
+        <li><span class="check">✓</span> Bookmarks</li>
+        <li class="locked"><span class="cross">✕</span> Full library access</li>
+      </ul>
+      <button class="btn-plan btn-plan-white" onclick="alert('Payment coming soon!')">Get Scholar — ₦500/mo</button>
+    </div>
+
+    <div class="pricing-card reveal" style="transition-delay:.24s">
+      <div class="plan-name">Master 👑</div>
+      <div class="plan-price"><sup>₦</sup>1,000<sub>/mo</sub></div>
+      <div class="plan-desc">Everything unlocked. For students who want to leave absolutely nothing to chance.</div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Unlimited CBT practice tests</li>
+        <li><span class="check">✓</span> All 10 chapter summaries</li>
+        <li><span class="check">✓</span> All audio lessons</li>
+        <li><span class="check">✓</span> Unlimited CBT summary tests</li>
+        <li><span class="check">✓</span> Full progress analytics</li>
+        <li><span class="check">✓</span> Bookmarks & notes</li>
+        <li><span class="check" style="color:#D97706;">✓</span> Priority support</li>
+      </ul>
+      <button class="btn-plan btn-plan-gold" onclick="alert('Payment coming soon!')">Get Master — ₦1,000/mo</button>
+    </div>
+
+  </div>
+  <p style="text-align:center;margin-top:28px;font-size:13px;color:var(--text-muted);">
+    🔒 Secure payments via Paystack &nbsp;·&nbsp; Card, Bank Transfer & USSD &nbsp;·&nbsp; Cancel anytime
+  </p>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonials">
+  <div class="section-label">Student Reviews</div>
+  <h2 class="section-title">What JAMB Students Are Saying</h2>
+  <p class="section-sub">Real feedback from students who used Zenova to prepare for their JAMB exam.</p>
+  <div class="testimonials-grid">
+    <div class="tcard reveal">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-quote">"The audio summaries were a game changer. I listened on my way to school every morning. The character analysis section alone got me 3 correct answers in JAMB!"</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar">AD</div>
+        <div><div class="tcard-name">Adaeze Nwosu</div><div class="tcard-role">Scholar Plan · Lagos</div></div>
+      </div>
+    </div>
+    <div class="tcard reveal" style="transition-delay:.1s">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-quote">"The CBT tests are exactly like the real JAMB questions on The Lekki Headmaster. After two weeks on the Master plan I knew the novel inside out."</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar" style="background:#0F6E56;">TK</div>
+        <div><div class="tcard-name">Tunde Kazeem</div><div class="tcard-role">Master Plan · Lekki</div></div>
+      </div>
+    </div>
+    <div class="tcard reveal" style="transition-delay:.2s">
+      <div class="tcard-stars">★★★★★</div>
+      <p class="tcard-quote">"₦500 is nothing compared to a lesson teacher. The themes section helped me score full marks on the Use of English comprehension. Highly recommend!"</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar" style="background:#B45309;">FO</div>
+        <div><div class="tcard-name">Funke Oladele</div><div class="tcard-role">Scholar Plan · Ikeja</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq">
+  <div class="section-label">FAQ</div>
+  <h2 class="section-title">Frequently Asked Questions</h2>
+  <p class="section-sub">Everything you need to know before getting started.</p>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is The Lekki Headmaster really the JAMB novel for 2025/2026? <span class="arrow">+</span></div>
+      <div class="faq-a">Yes. The Lekki Headmaster by Kabir Alabi Garba is the official set novel for the JAMB UTME Use of English examination for the 2025/2026 session. JAMB will set questions from this novel.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is the free trial really free? No credit card? <span class="arrow">+</span></div>
+      <div class="faq-a">Yes — completely free. You get 1 CBT test, 1 chapter summary, and 1 audio lesson with no card required. Upgrade only when you're ready.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I pay? Do you accept bank transfer? <span class="arrow">+</span></div>
+      <div class="faq-a">We use Paystack for secure payments. You can pay with debit card, bank transfer, or USSD (*737#, *901#, etc.). All major Nigerian banks are supported.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the difference between Scholar and Master? <span class="arrow">+</span></div>
+      <div class="faq-a">Scholar (₦500/mo) gives 1 CBT test per day, 5 chapters, and 5 audio lessons. Master (₦1,000/mo) unlocks everything — unlimited CBT tests, all 10 chapters, all audio lessons, and priority support.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I use Zenova on my phone? <span class="arrow">+</span></div>
+      <div class="faq-a">Yes! Zenova is fully mobile-responsive. You can study on any device — phone, tablet, or laptop — with the same complete experience.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I cancel my plan anytime? <span class="arrow">+</span></div>
+      <div class="faq-a">Yes. Cancel anytime from your account settings. Your access continues until the end of your billing period, then you move to the free plan automatically — no surprise charges.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="cta-box reveal">
+    <h2>Ready to Master The Lekki Headmaster?</h2>
+    <p>Join thousands of JAMB candidates studying smarter with Zenova. Start completely free — no card needed.</p>
+    <div class="cta-actions">
+      <a href="signup.html" class="btn-hero-white">Start for Free →</a>
+      <a href="#pricing" class="btn-hero-outline">View Plans</a>
+    </div>
+    <p class="cta-note">✓ Free trial &nbsp;·&nbsp; ✓ No credit card &nbsp;·&nbsp; ✓ Cancel anytime</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand-col">
+      <div class="brand">ZENOVA</div>
+      <div class="sub">Master the Lekki Headmaster</div>
+      <p>Nigeria's complete JAMB preparation platform for The Lekki Headmaster novel — CBT practice, chapter summaries, and audio lessons.</p>
+      <div class="social-links">
+        <a href="#" class="social-btn" title="TikTok">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+        </a>
+        <a href="#" class="social-btn" title="YouTube">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 7.19c-.23-.87-.91-1.55-1.78-1.78C18.25 5 12 5 12 5s-6.25 0-7.8.41c-.87.23-1.55.91-1.78 1.78C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.87.91 1.55 1.78 1.78C5.75 19 12 19 12 19s6.25 0 7.8-.41c.87-.23 1.55-.91 1.78-1.78C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>
+        </a>
+        <a href="#" class="social-btn" title="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="#" class="social-btn" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Study Materials</h4>
+      <ul>
+        <li><a href="#">CBT Practice</a></li>
+        <li><a href="#">Chapter Summaries</a></li>
+        <li><a href="#">Audio Lessons</a></li>
+        <li><a href="#">Character Analysis</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Community & Resources</h4>
+      <ul>
+        <li><a href="#">🎵 Follow us on TikTok</a></li>
+        <li><a href="#">🎥 Watch on YouTube</a></li>
+        <li><a href="#">📸 Instagram</a></li>
+        <li><a href="#">👥 Facebook Group</a></li>
+        <li><a href="#" style="color:var(--gold-light);font-weight:600;">📄 Get Our Free PDF</a></li>
+        <li><a href="#" style="color:var(--gold-light);font-weight:600;">🏫 Join Our Premium Class</a></li>
+        <li><a href="#">🌐 Visit Our Website</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 Zenova. All rights reserved. · Built for Nigerian JAMB candidates.</p>
+    <p>Made with ❤️ for students who want to pass.</p>
+  </div>
+</footer>
+
+<script>
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+
+  // Nav active on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 130) current = s.id; });
+    navLinks.forEach(a => { a.style.color = a.getAttribute('href') === '#' + current ? 'var(--navy)' : ''; a.style.fontWeight = a.getAttribute('href') === '#' + current ? '700' : ''; });
+  });
+</script>
+</body>
+</html>
